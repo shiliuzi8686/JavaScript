@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /**
+         * 检测一个值是否可调用
+         * @param {*} any 要检测的值
+         * @returns {void}
+         */
+        const checkCallable = function checkCallable(any) {
+            if (typeof any !== 'function') {
+                throw new TypeError(`${any} is not a function!`);
+            }
+        };
+
+        /**
+         * 检测一个函数是否以 new 方式调用
+         * @param {object} thisArg this 值
+         * @param {function} constructor 一个函数
+         * @returns {void}
+         */
+        const checkCallAsConstructor = function checkCallAsConstructor(thisArg, constructor) {
+        if (!(thisArg instanceof constructor)) {
+            throw new TypeError(`${constructor.name}() is not called as constructor!`);
+        }
+        };
+
+        /**
+         * 使一个回调进入微任务队列
+         * @param {function} callback 微任务回调
+         * @returns {void}
+         */
+        const _queueMicrotask = function queueMicrotask(callback) {
+        checkCallable(callback);
+
+        if (typeof window !== 'undefined') {
+            if (window.queueMicrotask) {
+            window.queueMicrotask(callback);
+            } else {
+            let flag = false;
+            const textNode = document.createTextNode(String(flag));
+            const observer = new MutationObserver(callback);
+            observer.observe(textNode, { characterData: true });
+            flag = !flag;
+            textNode.nodeValue = String(flag);
+            }
+        }
+
+        if (typeof process !== 'undefined') {
+            process.nextTick(callback);
+        }
+        };
+
+        /**
+         * @class promise 类
+         */
+        const MyPromise = (function createMyPromiseClass() {
+        // 使用 weakmap 封装私有属性
+        const store = new WeakMap();
+
+        /**
+         * 获取私有属性
+         * @param {object} thisArg this 值
+         * @returns {object}
+         */
+        const getPrivates = function getPrivates(thisArg) {
+            return store.get(thisArg);
+        };
+
+        /**
+         * 设置私有属性
+         * @param {object} thisArg this 值
+         * @param {object} privates 私有属性
+         */
+        const setPrivates = function setPrivates(thisArg, privates) {
+            store.set(thisArg, privates);
+        };
+
+        const PENDING = 0;
+        const FULFILLED = 1;
+        const REJECTED = -1;
+
+        /**
+         * 创建 fulfill 和 reject 内部函数
+         * @param {Promise} promise promise 实例
+         * @returns {object}
+         */
+        const createResolvingFunctions = function createResolvingFunctions(promise) {
+            const privates = getPrivates(promise);
+
+            const resolve = (value) => {
+            if (privates.state === PENDING) {
+                privates.result = value;
+                privates.state = FULFILLED;
+
+                privates.fulfillReactions.forEach((reaction) => {
+                _queueMicrotask(() => reaction(value));
+                });
+            }
+            };
+
+            const reject = (reason) => {
+            if (privates.state === PENDING) {
+                privates.result = reason;
+                privates.state = REJECTED;
+
+                privates.rejectReactions.forEach((reaction) => {
+                _queueMicrotask(() => reaction(reason));
+                });
+            }
+            };
+
+            return { resolve, reject };
+        };
+
+        /**
+        * 期约构造函数
+        * @constructor
+        * @param {function} executor 期约执行器
+        * @returns {Promise}
+        */
+        const MyPromiseConstructor = function Promise(executor) {
+            checkCallable(executor);
+            checkCallAsConstructor(this, MyPromiseConstructor);
+
+            setPrivates(this, {
+            state: PENDING,
+            result: undefined,
+            fulfillReactions: [],
+            rejectReactions: [],
+            });
+
+            const resolvingFunctions = createResolvingFunctions(this);
+
+            try {
+            executor(resolvingFunctions.resolve, resolvingFunctions.reject);
+            } catch (error) {
+            resolvingFunctions.reject(error);
+            }
+        };
+
+        /**
+        * then 接口
+        * @param {function} onFulfilled 解决回调
+        * @param {function} onRejected 拒绝回调
+        * @returns {Promise}
+        */
+        MyPromiseConstructor.prototype.then = function then(onFulfilled, onRejected) {
+            const onFulfilledUpdated = typeof onFulfilled === 'function' ? onFulfilled : (value) => value;
+            const onRejectedUpdated =
+            typeof onRejected === 'function'
+                ? onRejected
+                : (reason) => {
+                    throw new Error(reason);
+                };
+            const privates = getPrivates(this);
+
+            if (privates.state === PENDING) {
+            return new MyPromise((f, r) => {
+                privates.fulfillReactions.push(() => {
+                const reactionResult = onFulfilledUpdated(privates.result);
+
+                if (reactionResult instanceof MyPromise) {
+                    reactionResult.then((value) => f(value));
+                } else {
+                    f(reactionResult);
+                }
+                });
+                privates.rejectReactions.push(() => {
+                const reactionResult = onRejectedUpdated(privates.result);
+
+                if (reactionResult instanceof MyPromise) {
+                    reactionResult.then(undefined, (value) => r(value));
+                } else {
+                    r(reactionResult);
+                }
+                });
+            });
+            }
+            if (privates.state === FULFILLED) {
+            const reactionResult = onFulfilledUpdated(privates.result);
+
+            return new MyPromise((f) =>
+                _queueMicrotask(() => {
+                if (reactionResult instanceof MyPromise) {
+                    reactionResult.then((value) => f(value));
+                } else {
+                    f(reactionResult);
+                }
+                }),
+            );
+            }
+
+            const reactionResult = onRejectedUpdated(privates.result);
+            return new MyPromise((_, r) =>
+            _queueMicrotask(() => {
+                if (reactionResult instanceof MyPromise) {
+                reactionResult.then(undefined, (value) => r(value));
+                } else {
+                r(reactionResult);
+                }
+            }),
+            );
+        };
+
+        /**
+        * promise catch 方法
+        * @param {function} onRejected 拒绝 promise 回调
+        * @returns {MyPromise}
+        */
+        MyPromiseConstructor.prototype.catch = function _catch(onRejected) {
+            return this.then(undefined, onRejected);
+        };
+
+        /**
+        * 用于类型判断
+        * @returns {string}
+        */
+        MyPromiseConstructor.prototype[Symbol.toStringTag] = function toStringTag() {
+            return 'MyPromise';
+        };
+
+        /**
+        * Promise.resolve() 方法
+        * @returns {MyPromise}
+        */
+        MyPromiseConstructor.resolve = function resolve(value) {
+            return new MyPromise((f) => f(value));
+        };
+
+        /**
+        * Promise.reject() 方法
+        * @returns {MyPromise}
+        */
+        MyPromiseConstructor.reject = function reject(reason) {
+            return new MyPromise((_, r) => r(reason));
+        };
+
+        return MyPromiseConstructor;
+        })();
+
+        // new MyPromise((f) => setTimeout(() => f('value'), 1000))
+        // .then((value) => {
+        //     console.log(value);
+        //     return new MyPromise((f) => setTimeout(() => f(`${value} chain1`), 1000));
+        // })
+        // .then((value) => {
+        //     console.log(value);
+        //     return new MyPromise((f) => setTimeout(() => f(`${value} chain2`), 1000));
+        // })
+        // .then(console.log);
+        // 1s 后 -> value
+        // 2s 后 -> value chain1
+        // 3s 后 -> value chain2
+        new MyPromise((resolve,reject) => {
+            setTimeout( () => {
+                resolve('红色')
+            })
+        })
+        .then(
+            value => {
+                log('成功的结果为：',value)
+                new MyPromise((resolve,reject) => {
+                    setTimeout( () => {
+                        reject('橙色')
+                    })
+                })
+            },
+            reason => {
+                log('失败的结果为：',reason)
+                new MyPromise((resolve,reject) => {
+                    setTimeout( () => {
+                        resolve('橙色')
+                    })
+                })
+            }
+        )
+        .then(
+            value => {
+                log('成功的结果为：',value)
+                new MyPromise((resolve,reject) => {
+                    setTimeout( () => {
+                        resolve('绿色')
+                    })
+                })
+            },
+            reason => {
+                log('失败的结果为：',reason)
+                new MyPromise((resolve,reject) => {
+                    setTimeout( () => {
+                        resolve('绿色')
+                    })
+                })
+            }
+        )
+        .then(
+            value => {
+                log('成功的结果为：',value)
+                // setTimeout( () => {
+                //     resolve('橙色')
+                // })
+            },
+            reason => {
+                log('失败的结果为：',reason)
+                // setTimeout( () => {
+                //     resolve('绿色')
+                // })
+            }
+        )
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /** 1 */
+        // function controlScope() {
+        //     const foo = 'foo';
+        //     let bar = 'bar';
+        //     setTimeout( () => {
+        //         bar = 'bar changed'
+        //         console.log('执行');
+        //     },2000)
+        //     return bar;
+        // }
+
+        // console.log(controlScope());  // -> 'bar'
+        //     // -> 'bar'，下面这个也是'bar'
+        //     // 为什么呢？，每次函数执行完函数里面的局部变量就会被销毁
+        //     // 但其实 controlScope 函数里的setTimeOut函数应该也是一个闭包
+        //     // 该闭包为啥每次打印出来都是 'bar' 呢？
+        //     // 每次调用这个函数，都会先初始化 bar 变量，修改 bar 的是异步代码，
+        //     // 还没修改就已经将初始化的值return了，自然每次打印出来的就是 'bar'
+        // setTimeout( () => console.log(controlScope()),2500) 
+        // console.log(controlScope)
+
+            // 怎么查看return的这个 bar 是动态的呢？
+            // 将 bar 变量定义在函数体外部，这样每次执行函数就不会初始化该变量了
+            // 并且每次调用该函数也能得到自由变量,拿到 'bar changed'(setTimeOut的回调函数是一个闭包)
+        // let bar = 'bar';
+        // function controlScope() {
+        //     const foo = 'foo';
+        //     setTimeout( () => {
+        //         bar = 'bar changed'
+        //         console.log('执行');
+        //     },2000)
+        //     return bar;
+        // }
+
+        // console.log(controlScope());  // -> 'bar'
+        // setTimeout( () => console.log(controlScope()),2500) 
+        // // console.log(controlScope)
+
+        /** 2 */
+        // 2.1 异步修改return中的内容（基本数据类型）
+            // const exposure = (function () {
+            //     const foo = 'foo';
+            //     let bar = 'bar';
+
+            //     setTimeout(() => {
+            //         exposure.bar = 'bar changed';
+            //         console.log('执行')
+            //     }, 2000);
+
+            //     return { bar };
+            // })();
+
+            // console.log(exposure.bar);
+            // // -> 'bar'
+
+            // setTimeout(() => console.log(exposure.bar), 2500);
+            // // -> 'bar'
+        // 2.2 异步修改变量中的内容（引用类型）
+            const exposure = (function () {
+                const foo = 'foo';
+                let bar = {key:'bar'};
+
+                setTimeout(() => {
+                    bar.key = 'bar changed';
+                    console.log('执行')
+                }, 2000);
+
+                return { bar };
+            })();
+
+            console.log(exposure.bar);
+            // -> 'bar'
+
+            setTimeout(() => console.log(exposure.bar), 2500);
+            // -> 'bar'
+        // 2.3 
+    </script>
+</body>
+</html>

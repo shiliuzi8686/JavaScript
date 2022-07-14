@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            height: 50px;
+            width: 50px;
+            margin: auto;
+        }
+        /* .box-bg-red{
+            background-color: red;
+        }
+        .box-bg-yellow{
+            background-color: yellow;
+        }
+        .box-bg-green{
+            background-color: green;
+        } */
+    </style>
+</head>
+<body>
+    <div class = 'box'></div>
+    <script>
+        const {log} = console
+        
+        // 网页中有一个 div，要求它的背景颜色从红黄绿间隔 1 秒进行变化
+        const box = document.querySelector('.box');
+
+        // box.classList.remove('box-bg-red');
+        // box.classList.add('box-bg-yellow');
+
+        // 回调地狱
+        // function timer() {
+        //     setTimeout( () => {
+        //         box.style.backgroundColor = 'red'
+        //         setTimeout( () => {
+        //             box.style.backgroundColor = 'yellow'
+        //             setTimeout( () => {
+        //                 box.style.backgroundColor = 'green'
+        //                 timer()
+        //             },1000)
+        //         },1000)
+        //     },1000)
+        // }
+
+        // 使用Promise
+        function timer() {
+            new Promise((resolve)=>{
+                setTimeout(()=>{
+                    box.style.backgroundColor = 'red'
+                    resolve('red')
+                },1000)
+            })
+            .then(
+                value => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'yellow'
+                            resolve('yellow')
+                        },1000)
+                    })
+                }
+            )
+            .then(
+                value => {
+                    // then()方法里的回调的执行结果
+                    log('成功的结果：',value)
+                    return new Promise( (resolve) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'green'
+                            resolve('green')
+                        },1000)
+                    })
+                }
+            )
+            .then(
+                value => {
+                    log('成功的结果：',value)
+                    timer()
+                },
+                reason => {
+                    log('失败的结果：',reason)
+                }
+            )
+        }
+        timer()
+
+        function _timer() {
+            new Promise((resolve)=>{
+                setTimeout(()=>{
+                    box.style.backgroundColor = 'red'
+                    resolve('red')
+                },1000)
+            })
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'yellow'
+                            resolve('yellow')
+                        },1000)
+                    })
+                }
+            )
+            .then(
+                (value) => {
+                    // then()方法里的回调的执行结果
+                    log('成功的结果：',value)
+                    // 2.返回的是一个Promise？？？，那这个返回的Promise的状态就决定了下一个then方法里回调的执行，成功的结果会被下一个then()方法的成功的回调接收，并执行该成功的回调。失败则类似
+                        // return new Promise( (resolve) => {
+                        //     setTimeout(()=>{
+                        //         box.style.backgroundColor = 'green'
+                        //         // resolve('green')
+                        //         return 'green' //这个setTimeout函数return的 'green' ，但这个Promise的状态并没有改变，还是 padding 初始化的状态，因此下面的then方法里的回调不会执行
+                        //     },1000)
+                        // })
+                    // return 的是一个非Promise的值
+                    // setTimeout(()=>{
+                    //     box.style.backgroundColor = 'green'
+                    // },1000)
+                    return 'green'
+                }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    // 这样写应该会有问题吧，会超出调用栈大小吗，调用栈会溢出吗
+                    timer() //这个地方需要继续return一个新的Promise来执行timer这个异步操作吗
+                },
+                reason => {
+                    log('失败的结果：',reason)
+                }
+            )
+        }
+        // _timer()
+
+        // 测试失败的Promise
+        function timer1() {
+            new Promise((resolve,reject)=>{
+                setTimeout(()=>{
+                    box.style.backgroundColor = 'red'
+                    resolve('red')
+                },1000)
+            })
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'yellow'
+                            reject('yellow')
+                        },1000)
+                    })
+                },
+                reason => {
+                    log('失败的原因：',reason)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'yellow'
+                            reject('yellow')
+                        },1000)
+                    })
+                }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'green'
+                            reject('green')
+                        },1000)
+                    })
+                },
+                reason => {
+                    log('失败的原因：',reason)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'green'
+                            reject('green')
+                        },1000)
+                    })
+                }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    timer1()
+                },
+                reason => {
+                    log('失败的原因：',reason)
+                    timer1()
+                }
+            )
+        }
+        // timer1()
+
+        function timer2() {
+            new Promise((resolve,reject)=>{
+                setTimeout(()=>{
+                    box.style.backgroundColor = 'red'
+                    resolve('red')
+                },1000)
+            })
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'yellow'
+                            reject('yellow')
+                        },1000)
+                    })
+                },
+                // reason => {
+                //     log('失败的原因：',reason)
+                //     return new Promise( (resolve,reject) => {
+                //         setTimeout(()=>{
+                //             box.style.backgroundColor = 'yellow'
+                //             reject('yellow')
+                //         },1000)
+                //     })
+                // }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'green'
+                            reject('green')
+                        },1000)
+                    })
+                },
+                // reason => {
+                //     log('失败的原因：',reason)
+                //     return new Promise( (resolve,reject) => {
+                //         setTimeout(()=>{
+                //             box.style.backgroundColor = 'green'
+                //             reject('green')
+                //         },1000)
+                //     })
+                // }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'green'
+                            reject('green')
+                        },1000)
+                    })
+                    // timer2()
+                },
+                reason => {
+                    log('失败的原因：',reason)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'green'
+                            reject('green')
+                        },1000)
+                    })
+                    // timer2()
+                }
+            )
+            .catch( 
+                reason => {
+                    log('catch里的失败原因：',reason)
+                }
+            )
+        }
+        // timer2()
+
+        function timer3() {
+            new Promise((resolve,reject)=>{
+                setTimeout(()=>{
+                    box.style.backgroundColor = 'red'
+                    resolve('red')
+                },1000)
+            })
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    return new Promise( (resolve,reject) => {
+                        setTimeout(()=>{
+                            box.style.backgroundColor = 'yellow'
+                            reject('yellow')
+                        },1000)
+                    })
+                },
+                // reason => {
+                //     log('失败的原因：',reason)
+                //     return new Promise( (resolve,reject) => {
+                //         setTimeout(()=>{
+                //             box.style.backgroundColor = 'yellow'
+                //             reject('yellow')
+                //         },1000)
+                //     })
+                // }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    // return new Promise( (resolve,reject) => {
+                    //     setTimeout(()=>{
+                    //         box.style.backgroundColor = 'green'
+                    //         reject('green')
+                    //     },1000)
+                    // })
+                },
+                reason => {
+                    log('失败的原因：',reason)
+                    return '成功'
+                    // return new Promise( (resolve,reject) => {
+                    //     setTimeout(()=>{
+                    //         box.style.backgroundColor = 'green'
+                    //         reject('green')
+                    //     },1000)
+                    // })
+                }
+            )
+            .then(
+                (value) => {
+                    log('成功的结果：',value)
+                    // return new Promise( (resolve,reject) => {
+                    //     setTimeout(()=>{
+                    //         box.style.backgroundColor = 'green'
+                    //         reject('green')
+                    //     },1000)
+                    // })
+                    // timer3()
+                },
+                reason => {
+                    log('失败的原因：',reason)
+                    // return new Promise( (resolve,reject) => {
+                    //     setTimeout(()=>{
+                    //         box.style.backgroundColor = 'green'
+                    //         reject('green')
+                    //     },1000)
+                    // })
+                    // timer3()
+                }
+            )
+            .catch( 
+                reason => {
+                    log('catch里的失败原因：',reason)
+                }
+            )
+        }
+        // timer3()
+    </script>
+</body>
+</html>

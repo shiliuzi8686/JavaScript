@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        const obj = {
+            ok:'数据正常'
+        }
+        log(obj)
+        
+        // // 下面两种结果，是 symbol.toPrimitive 转换的，还是toString、valueOf转换的呢。
+        // Reflect.ownKeys()打印看到 obj 身上没有 symbol.toPrimitive 方法
+        // log(obj.toString()) // '[object Object]' toString(toPrimitive(value, 'string')) 默认会传入 'string'
+        // log(String(obj))    // [object Object]' toString(toPrimitive(value, 'string')) 默认会传入 'string'
+        // // 对象的原型(Object.prototype)没有toNumber方法
+        // // log(obj.toNumber()) // 报错
+        // log(Number(obj))       //NaN  toNumber(toPrimitive(value, 'number')) 默认会传入 'number'
+
+        
+        // log(obj.valueOf())  // 返回了对象本身
+        // log(new Number('hello').valueOf()) //NaN
+
+
+        let values = ['valueOf', 'toString']
+        for(const value of values){
+            log(value)
+        }
+        log(Reflect.ownKeys(obj))
+        log(Reflect.ownKeys(Date))
+    </script>
+</body>
+</html>

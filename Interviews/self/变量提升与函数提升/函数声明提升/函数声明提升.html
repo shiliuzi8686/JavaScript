@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+            // console.log(fn1)//ƒ fn1(){ console.log('fn1') }
+            // fn1() //fn1
+            // console.log(fn2)//undefined
+            // fn2() //Uncaught TypeError: fn2 is not a function
+            // function fn1(){
+            //     console.log('fn1')
+            // }
+            // var fn2 = function (){
+            //     console.log('fn2')
+            // }
+
+            /** 函数提升案例 */
+            var a = 1
+            function fn3(){
+                a = 10
+                console.log(a);
+                return
+                function a (){}
+            }
+            fn3()
+            console.log(a)
+
+            // 内部实际运行
+            var a = 1
+            function fn3(){
+                function a (){}
+                a = 10
+                console.log(a);
+                return
+            }
+            fn3()
+            console.log(a)
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const { log } = console;
+
+        // 输入两个巨大的整数型字符串
+        const bigInt1StrInput = '7'.repeat(20);
+        const bigInt2StrInput = '5'.repeat(15);
+        /**
+         * 思路：两个字符串值从最后一位开始，对应相加
+         * 
+        */
+        // 输出一个正确的字符串表示相加结果
+        function add(bigInt1Str, bigInt2Str) {
+            // 你的实现
+            let carry = '' // 进位
+            // 将字符串转成数组并反转
+            let strArry1 = bigInt1Str.split('').reverse()
+            let strArry2 = bigInt2Str.split('').reverse()
+            // 取两个数组长度的较大值
+            let length = strArry1.length >= strArry2.length ? strArry1.length : strArry2.length
+            let resStr = ''//结果字符串
+            // log(strArry1);
+            // log(strArry2);
+            // log(length);
+            for (let i = 0; i < length; i++) {
+                let result
+                let sum
+                // log(strArry1[i])
+                if (!strArry1[i]) {
+                    result = (Number(strArry2[i]) + Number(carry)).toString().split('')
+                    // log((Number(strArry2[i]) + Number(carry)).toString())
+                    
+                    if (result.length > 1) {
+                        sum = result[1]
+                        // resStr += Number(sum) + Number(carry)
+                        carry = result[0]
+                    } else {
+                        // resStr += Number(sum)
+                        sum = result[0]
+                        carry = ''
+                    }
+                    resStr += Number(sum)
+                    // log(resStr)
+                    
+                    // carry = ''
+                } else if (!strArry2[i]) {
+                    result = (Number(strArry1[i]) + Number(carry)).toString().split('')
+                    // log((Number(strArry1[i]) + Number(carry)).toString())
+                    
+                    if (result.length > 1) {
+                        sum = result[1]
+                        // resStr += Number(sum) + Number(carry)
+                        carry = result[0]
+                    } else {
+                        // resStr += Number(sum)
+                        sum = result[0]
+                        carry = ''
+                    }
+                    resStr += Number(sum)
+                    // log(resStr)
+                    
+                    // carry = ''
+                } else {
+                    result = (Number(strArry2[i]) + Number(strArry1[i]) + Number(carry)).toString().split('')
+                    // log((Number(strArry2[i]) + Number(strArry1[i]) + Number(carry)).toString())
+                    // log(result)
+                    
+                    if (result.length > 1) {
+                        sum = result[1]
+                        // resStr += Number(sum) + Number(carry)
+                        carry = result[0]
+                    } else {
+                        // resStr += Number(sum)
+                        sum = result[0]
+                        carry = ''
+                    }
+                    resStr += Number(sum)
+                    // log(resStr)
+                    
+                    // carry = ''
+                }
+            }
+            return resStr.split('').reverse().join("")
+        }
+
+        const result = add(bigInt1StrInput, bigInt2StrInput);
+        log(result)
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+
+        function isNumbericStr(str) {
+            // 纯数字
+            // let reg1 = /^[+-0-9][0-9]+\.*[0-9]+[eE][+-0-9]/
+            // return reg1.test(str)
+
+            // 以数组或正负号开头 
+            // let reg1 = /^[+-]/              //以正负号开头
+            // let reg2 = /^[0-9]/             //以数字开头
+            // let reg3 = /[0-9]\.[0-9]+[eE][+-]*[0-9]+[0-9]*/   //数字后面有小数点,兼容科学计数法
+            // let reg4 = /[0-9]\.[0-9]+[0-9]$/            //数字后面有小数点，非科学计数法
+            // let reg5 = /[0-9]$/      //数字后面没有小数点,则须以数字结尾
+            // let reg6 = /[0-9]$/
+            // let reg6 = /[0-9]$/
+            // 必须正负号或数字开头，匹配整数或带小数的（兼容科学计数法）
+            // return (reg1.test(str) || reg2.test(str)) && ((reg5.test(str)) || (reg3.test(str) || reg4.test(str)) )
+
+            let reg1 = /^[+-][0-9]+\.[0-9]+$/                       //有正负号、有小数点、非科学计数法
+            let reg2 = /^[0-9]+\.[0-9]+$/                           //无正负号、有小数点、非科学计数法
+            let reg3 = /^[+-][0-9]+\.[0-9]+[eE][+-]*[0-9]+[0-9]*/   //有正负号、有小数点、科学计数法
+            let reg4 = /^[0-9]+\.[0-9]+[eE][+-]*[0-9]+[0-9]*/       //无正负号、有小数点、科学计数法
+            let reg5 = /^[0-9]+$/                                   //没有正负号的整数
+            let reg6 = /^[+-][0-9]+$/                               //有正负号的整数
+            return reg1.test(str) || reg2.test(str) || reg3.test(str) || reg4.test(str) || reg5.test(str) || reg6.test(str)
+        }
+
+        // const inputStrTest = '0';
+        // const inputStrTest = '0.1';
+        // const inputStrTest = '+12.1';
+        // const inputStrTest = '-12.01';
+        // const inputStrTest = '-78.23e-17';
+        const inputStrTest = '-89.e+10';
+        log(isNumbericStr(inputStrTest))
+        // const inputStr1 = '-78.23e-17';
+        // const inputStr2 = '-89.e+10';
+
+        // log(isNumbericStr(inputStr1), isNumbericStr(inputStr2));
+        // -> true false
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS之new关键字</title>
+</head>
+<body>
+    <script>
+        // 手写 new 关键字创建实例的过程
+        // function fn (name) {
+        //     this.name = name
+        // }
+        // FN = new fn('坚果仁')
+        // console.log('FN',FN)
+
+        // function instance(fn,...arg){
+        //     let obj = {}
+        //     obj._proto_ = fn.prototype
+        //     fn.call(obj,...arg)
+        //     return obj
+        // }
+        // FN = instance(fn,'我的名字')
+        // console.log('FN',FN)
+
+        // function instance(fn,...arg){
+        //     let obj = {}
+        //     obj._proto_ = fn.prototype
+        //     fn.call(obj,...arg)
+        //     return obj
+        // }
+
+        // let name = '好名字'
+        // FN = function(fn,name){
+        //     let obj = {}
+        //     obj._proto_ = fn.prototype
+        //     fn.call(obj,name)
+        //     return obj
+        // }(fn,name)
+        // console.log('FN',FN)
+
+        // 手写new操作符
+        function FUNC(name,age){
+            this.name = name 
+            this.age = age 
+        }
+        function selfInstance(FUNC,...arg){
+            //1.创建一个新的对象
+            let obj = {}
+            //2.新对象原型指向构造函数原型对象
+            obj._proto_ = FUNC.prototype
+            //3.将构造函数的this指向新对象
+            let result = FUNC.call(obj,...arg)
+            //4.根据返回值判断
+            return result instanceof Object ? result : obj
+        }
+        let myInstance = selfInstance(FUNC,'嘿嘿嘿',20)
+        console.log('myInstance',myInstance);
+
+        //构造函数的返回值及影响
+        function fn1(school){
+            this.school = school
+            return '大学'
+        }
+        // let fn1Instance = new fn1('理工')
+        // console.log(fn1Instance.school); //'理工'
+
+        function fn2(school){
+            this.school = school
+            return {age: '大学'}
+        }
+        let fn1Instance2 = new fn2('理工')
+        // console.log(fn1Instance2.school); //undefined
+    </script>
+</body>
+</html>

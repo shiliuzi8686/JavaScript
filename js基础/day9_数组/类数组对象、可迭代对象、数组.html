@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        function arr (){
+            log(arguments)
+            log(Array.from(arguments)) //数组既有length属性，又有[Symbol.iterator]接口
+        }
+        // 打印可以看到这个 arguments 是一个对象实例
+        // 身上有[Symbol.iterator]属性，可以进行迭代，是一个可迭代对象
+        // 有length属性，是一个类数组对象
+        arr(1,'2','3')
+    </script>
+</body>
+</html>

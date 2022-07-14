@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+
+        // 手写一个柯里化函数
+        function curry(func) {
+            //这个函数不能写成箭头函数形式，因为这个是递归函数，
+            // 在内部是需要调用自己的，需要用 function 声明，内部才能访问到这个函数，
+            // 进行递归调用(箭头函数是匿名函数，没有名字)
+            return function curried(...args){ 
+                if(args.length >= func.length) return func(...args)
+                // return (...preArgs) => curried(...args,...preArgs)
+                return function ok (...preArgs) {
+                    return curried(...args,...preArgs)
+                }
+            }
+        }
+        function add (a,b,c,d) {
+            return a + b + c + d
+        }
+        // log(curry(add)(1,2,3)(4))
+
+        // 手写一个管道函数
+        function pipe(...Funcs){
+            log('Funcs',Funcs) //查看这个收集参数的Funcs，是一个什么数据类型，拥有什么属性和方法（为啥可迭代）
+
+            return (arg) => Funcs.reduce( (preValue,Func) => Func(preValue),arg)
+        }
+        // 原始值调用这个数组原型身上的方法
+        const splice = (str) => String.prototype.splice.call(str,0,-1)
+        const trim = (str) => String.prototype.trim.call(str)
+        const toUpperCase = (str) => String.prototype.toUpperCase.call(str)
+        const replace = (pattern,replaceStr,str) => String.prototype.replace.call(str,pattern,replaceStr)
+
+        // let pipedFunc = pipe('  hello  ')
+        // let res = pipedFunc(trim,toUpperCase)
+        // log(res)
+        // 
+        // const curriedReplace = curry(replace)(/\s/g,'_')
+        // let pipedFunc = pipe(trim,toUpperCase,curriedReplace,log)
+        // pipedFunc('  h el lo   ')
+        // log(pipedFunc('  h el lo   '))
+
+
+        // 手写一个记忆函数
+        function memorize(func){
+            let map = new Map()
+            // return (key) =>  map.set(key,map.has(key) ? map.get(key)+1 : 1)
+            return (key) => {
+                if(map.has(JSON.stringify(key))) return map.get(JSON.stringify(key))
+                let res = func(key)
+                map.set(JSON.stringify(key),res)
+                return res
+            } 
+        }
+        function func (key) {
+            let availableKey = [1,2,3,4,5,6,7]
+            // 获取这个key对应的映射
+            log(`计算了${key}`)
+            if(availableKey.includes(key)) return availableKey.map( item => item*10)[availableKey.indexOf(key)]
+        }
+        let memorizedFunc = memorize(func)
+        log(memorizedFunc(2)) //计算了2 20
+        log(memorizedFunc(3)) //计算了3 30
+        log(memorizedFunc(2)) //20
+
+        // 使用函数式手写一道算法题：获取一个数组内出现次数大于 k 的元素
+        // function getEle = () =>
+
+        const nums = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4];
+        // let map = new Map()
+        // const getEleTimesMap = function(nums){
+        //     // nums.reduce( (key) => map.set(key,map.has(key) ? map.get(key)+1 : 1),[])
+        // }
+        const getEleTimesMap = (nums) => nums.reduce( (preMap,value) =>  { 
+            // log(preMap,value)
+            // log(preMap.has(value))
+            // log(preMap.get(value)+1)
+            preMap.set(value,preMap.has(value) ? preMap.get(value)+1 : 1) 
+            log(preMap)
+            return preMap
+        } , new Map())
+        // 利用了数组的解构赋值
+        // const mapFilter = (k,map) => [...map].filter(([key,value]) => value > k)
+        const mapFilter = (map) => [...map].filter(([key,value]) => value > 2)
+        // const curriedMapFilter = curry(mapFilter)(2)
+
+        const getEleWithMap = (arr) => arr.map(([key,value]) => key) 
+        // log()函数没有返回值，因此要使用log函数来调试管道函数，应该把这个log函数放在最后的位置
+        // const piped = pipe(getEleTimesMap,mapFilter,getEleWithMap,log)
+        // piped(nums)
+
+    </script>
+</body>
+</html>

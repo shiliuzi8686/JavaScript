@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+        /**
+         * 手写一个深拷贝
+         *  数据类型为对象的有：Number、String、Boolean、Object、Array、Function的实例对象
+         *  针对前三种：拿到原始值，再使用Object包装一下
+         *  针对后三种使用递归
+         *    递归：对象的属性一直往深层遍历下去，只要不是循环引用，
+         *          应该都能遍历到基本类型的属性
+         *    递：属性为引用类型
+         *    归：遇到了基本类型的属性
+        */
+        function deepClone(obj) {
+            // 考虑经过Object包装的 Number、String、Boolean
+            // let objPackRes
+            switch(Object.prototype.toString.call(obj).slice(8,-1)){
+                case 'number':
+                    // objPackRes =  Number(obj.valueOf())
+                    return new Number(obj.valueOf())
+                case 'string':
+                    return new String(obj.valueOf())
+                case 'boolean':
+                    return new Boolean(obj.valueOf())
+            }
+
+            let newObj = {}
+            for(let prop in obj){
+                // 循环引用的属性不拷贝
+                if(obj[prop] === obj){
+                    continue
+                }
+                if(obj[prop] instanceof Object) {
+                    newObj[prop] = deepClone(obj[prop])
+                } else {
+                    newObj[prop] = obj[prop]
+                }
+            }
+            return newObj
+        }
+        // let obj = {
+        //     ok:{
+        //         1:'1',
+        //         2:'2'
+        //     },
+        //     code:200
+        // }
+        let obj = new String('hello')
+        let res = deepClone(obj)
+        log(res,obj)
+
+        //#region 
+        // // 输入 1
+        // const articles = [
+        //     {
+        //         title: '深拷贝',
+        //         subTitle: '怎么实现深拷贝',
+        //         authorInfo: {
+        //             name: 'trigold',
+        //             id: 123456789,
+        //         },
+        //         content: '深拷贝是指深层的拷贝方式...',
+        //     },
+        //     {
+        //         title: '原型链',
+        //         subTitle: '怎么实现寄生式组合继承',
+        //         authorInfo: {
+        //             name: 'trigold',
+        //             id: 123456789,
+        //         },
+        //         content: '寄生式组合继承是流行的继承方式...',
+        //     },
+        // ];
+
+        // const articlesCopy = deepClone(articles);
+        // log(articlesCopy);
+
+        // // 输入2：测试循环引用
+        // function CircularReferedObj() {
+        //     this.info = 'foo';
+        //     this.circular = this;
+        // }
+
+        // const circularReferedObj = new CircularReferedObj();
+        // log(circularReferedObj.circular.circular.circular.circular.info);
+
+        // const circularReferedObjCopy = deepClone(circularReferedObj);
+        // log(circularReferedObjCopy);
+        //#endregion
+    </script>
+</body>
+</html>

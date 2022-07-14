@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        async function test1(){
+            log(await Promise.reject('1'))
+            log('test1 Promise end')
+        }
+        // async function test2 (){
+        //     log(await test1())
+        //     log('test2 Promise end')
+        // }
+        // test2()
+
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        class Person {
+            constructor(name,age){
+                this.name = name
+                this.age = age
+            }
+            getName = () => {
+                console.log(this.name)
+            }
+            getAge(){
+                console.log(this.age)
+            }
+        }
+        let Person1 = new Person('石榴',18)
+        Person1.getName()
+        log(Person1)
+
+        // function _defineProperty(obj, key, value) { 
+        //     if (key in obj) { 
+        //         Object.defineProperty(obj, key,{ 
+        //             value: value,
+        //             enumerable: true, 
+        //             configurable: true, 
+        //             writable: true 
+        //         }); 
+        //     } else {
+        //         obj[key] = value; 
+        //     } 
+        //     return obj; 
+        // }
+
+        // class Person {
+        //     constructor(name, age) {
+        //         _defineProperty(this, "getName", () => {
+        //             console.log(this.name);
+        //         });
+
+        //         this.name = name;
+        //         this.age = age;
+        //     }
+
+        // }
+
+        // let Person1 = new Person('石榴', 18);
+        // Person1.getName();
+        // log(Person1)
+    </script>
+</body>
+</html>

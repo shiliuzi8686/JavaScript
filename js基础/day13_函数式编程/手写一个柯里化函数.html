@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        // function curry(func) {
+        //     log(func.length)
+        //     return function a (a){
+        //         return function b (b){
+        //             return function c (c){
+        //                 return function d (d){
+        //                     return func(a,b,c,d)
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // function add(a,b,c,d){
+        //     return a + b + c + d
+        // }
+        // let res1 = curry(add)(1)
+        // let res2 = res1(1)
+        // let res3 = res2(1)
+        // let res4 = res3(1)
+        // log(res1)
+        // log(res2)
+        // log(res3)
+        // log(res4)
+        // log(res4())
+
+            // function curry(func) {
+            //     return function curried(...args) {
+            //         if (args.length >= func.length) {
+            //             return func.apply(this, args);
+            //         } else {
+            //             return function(...args2) {
+            //                 return curried.apply(this, args.concat(args2));
+            //             }
+            //         }
+            //     }
+            // }
+
+        // 函数柯里化
+        function curry(func) {
+            // 这个curried函数才是递归函数
+            return function curried (...args){
+                if(args.length >= func.length){
+                    return func(...args)
+                    // return func.apply(this,args)
+                } else {
+                    // 拿之前return的函数curried，再传入需要的参数
+                    return function (...preArgs) {
+                        return curried(...preArgs,...args)
+                        // return curried.apply(this,[...preArgs,...args])
+                    }
+                }
+            }   
+        }
+        let res1 = curry(add)(1)
+        let res = res1(1)(1)(1)
+
+        // log(curry(add)(1)(1)(1)(1))
+
+        // 手写管道函数
+        function pipe(...funcs) {
+            let firstFunc = arguments[0]
+            // return [...funcs].slice(1).reduce( (funcRes,preFun) =>preFun(funcRes),arguments[0]())
+            return function(...args) {
+                return [...funcs].slice(1).reduce( (funcRes,preFun) =>preFun(funcRes),firstFunc(...args))
+            }
+        }
+        function add(a,b,c,d){
+            return a + b + c + d
+        }
+        function reduce(a){
+            return a - 5
+        }
+        function ride(a){
+            return a*4
+        }
+        function except(a){
+            return a/2
+        }
+        let compose = pipe(add,reduce,ride,except)
+        // log(compose(1,2,3,4))
+
+        // 手写一个记忆函数
+        function memorize(func) {
+            // 相当于对 func函数 在执行之前，进行一些处理
+            // 可以说下面这个闭包是把这个自由变量存在memorize身上吗
+                // 这个引用了外部变量memorize,不是纯函数式的写法
+                // return function(key){
+                //     if(!memorize[key]) memorize[key] = func(key)
+                //     return memorize[key]
+                // }
+            // 利用闭包实现纯函数式的写法
+            let memoKeys = {}
+            return function(key){
+                if(!memoKeys[key]) memoKeys[key] = func(key)
+                return memoKeys[key]
+            }
+        }
+        function func (key) {
+            let availableKey = [1,2,3,4,5,6,7]
+            // 获取这个key对应的映射
+            log(`计算了${key}`)
+            if(availableKey.includes(key)) return availableKey.map( item => item*10)[availableKey.indexOf(key)]
+        }
+        let memorizedFunc = memorize(func)
+        log(memorizedFunc(2)) //计算了2 20
+        log(memorizedFunc(3)) //计算了3 30
+        log(memorizedFunc(2)) //20
+
+        const nums = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4];
+
+        // 获取一个数组内出现次数大于 k 的元素
+        const getElesWithOccuranceAbove = (nums, k) => {
+            return [...new Set(nums)].filter( key => countFilter(nums,key,k) )
+            // let counts = [...new Set(nums)].filter( key => count(nums,key) )
+            // return counts.filter(item => item > k)
+        };
+        // 数组去重使用set数据结构
+
+        // count函数，用来计数一个元素在数组中出现的次数
+        function countFilter (nums,key,k) {
+            return nums.filter( item => key === item).length > k
+        }
+        // log(...getElesWithOccuranceAbove(nums, 2));
+    </script>
+</body>
+</html>

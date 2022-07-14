@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+        // let arr = [1,2,3,4,5]
+        // js内置的reduce方法
+        /**
+         * 接收一个函数参数和一个归并起点值
+         *  函数参数接收四个参数：上一个归并值，当前项，当前项的索引、数组本身
+        */
+        // log(arr.reduce((lastValue,value,index,arr) => lastValue+value))
+
+        function myReduce(arr, reducer, initialValue) {
+            let res
+            // 循环起点
+            let i
+            if(initialValue){ // 存在归并起点
+                // 处理第一次归并
+                res = reducer(initialValue,arr[0])
+                i = 1
+            } else { // 不存在归并起点
+                // 处理第一次归
+                res = reducer(arr[0],arr[1])
+                i = 2
+            }
+            for(i;i < arr.length;i++){
+                res = reducer(res,arr[i])
+            }
+            return res
+            
+        }
+
+        log(myReduce([1, 2, 3], (pre, cur) => pre + cur, 10));
+        log(myReduce([1, 2, 3], (pre, cur) => pre + cur));
+    </script>
+</body>
+</html>

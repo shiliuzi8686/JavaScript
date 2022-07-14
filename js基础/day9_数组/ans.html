@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+
+        const arr = [[1,1,[[9]]], [2], [3, [4]], [[[6]]]];
+
+        // log(arr.flat());
+        // -> [ 1, 2, 3, [ 4 ], [ [ 6 ] ] ]
+
+        Array.prototype.deepFlat = function deepFlat() {
+            // 模拟深克隆
+            const copy = this.slice();
+            return copy.reduce((pre, cur) => pre.concat(Array.isArray(cur) ? cur.deepFlat() : cur), []);
+        };
+
+        // log(arr.deepFlat());
+        // -> [ 1, 2, 3, 4, 6 ]
+
+
+        // concat()
+        // log([[111],2].concat('ok'))/
+
+        // 理解slice()方法
+        let arrTest = [[1],2,[[5]]]
+        arrTest[2][0] = '5 changed'
+        log(arrTest[2][0]) //'5 changed'
+        log(arrTest.slice()[2][0]) //'5 changed'
+    </script>
+</body>
+</html>

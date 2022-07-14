@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=`, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let arr21 = ['1','2','3','4','5','6','7','8']
+        let res21 = arr21.map( (item,index,arry) => {
+        if(Number(item) <= 5) item += 'chg-' 
+        return item
+        })
+        console.log(res21); //[ '1chg-', '2chg-', '3chg-', '4chg-', '5chg-', '6', '7', '8' ]
+        console.log(arr21); //[ '1', '2', '3', '4', '5', '6', '7', '8' ]
+    </script>
+</body>
+</html>

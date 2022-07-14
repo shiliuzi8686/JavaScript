@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        // 原型链继承
+        function object(protoObj){
+            function fn (){}
+            fn.prototype = protoObj
+            // 返回的对象可以访问到原型上的属性和方法
+            return new fn()
+        }
+        // let instanceObj = object(Object.prototype)
+        // log(instanceObj)
+
+        // 寄生式继承
+        function createAnother(protoObj){
+            // 下面这个会继承原型上的属性和方法
+            let clone = object(protoObj)
+            // 下面的这个属性在返回的实例身上，不在原型上
+            clone.sayHi = function(){
+                log('Hi')
+            }
+            return clone
+        }
+        // let instanceObj = createAnother(Array.prototype)
+        // log(instanceObj)
+        // log(instanceObj.sayHi())
+
+        // 盗用构造函数
+        function Person(name,age){
+            // 通过构造函数创建的实例身上有这些属性和方法，不在原型上
+            this.name = name
+            this.age = age
+        }
+        function Student(name,age,id){
+            Person.call(this,name,age)
+            this.id = id
+        }
+        // 实例身上的属性和方法是通过构造函数弄出来的，不是通过原型继承来的，拿不到Person父类原型上的属性和方法
+        // let instanceObj = new Student('张三',18,'001')
+        // log(instanceObj)
+
+        // 组合继承（原型链+盗用构造函数形式），既能通过构造函数拿到父类的属性和方法，又能继承父类原型上的属性和方法
+        function PersonCon(name,age){
+            this.name = name
+            this.age = age
+        }
+        // 可以通过构造函数的方式给每个实例属性和方法
+        function StudentCon(name,age,id){
+            Person.call(this,name,age)
+            this.id = id
+        }
+        // 继承父类原型上的属性和方法
+        StudentCon.prototype = new PersonCon()
+        // 同时修改constructor指向
+        StudentCon.prototype.constructor = PersonCon
+        let StudentCon1 = new StudentCon('张三',18,'111')
+        log(StudentCon1)
+        // 由上可以看出组合继承既继承了通过构造函数生成的属性和方法，又继承了父类的原型上的属性的方法
+        // 子类的隐式原型指向父类的原型对象，能够访问父类原型上的属性和方法
+        // 缺点：两次调用父类的构造函数
+
+        // 寄生式组合继承
+        function interitPrototype(subType,superTty)
+    </script>
+</body>
+</html>

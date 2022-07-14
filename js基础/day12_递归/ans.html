@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+
+        // 这个递归函数就是求第n项的阶乘
+        // 递归函数的返回值就是当前值与前一项的乘积
+        function factorial(n) {
+            if(n === 0) return 1
+            return n * factorial(n - 1)
+        }
+        log(factorial(10));
+        // -> 3628800
+
+        // 每一项的结果是前两项的和
+        // 递归函数就是来求第n项的值
+        function fabonacci(n) {
+            if(n === 0) return 0
+            if(n === 1) return 1
+            return fabonacci(n - 1) + fabonacci(n - 2)
+        }
+        log(fabonacci(20));
+        // -> 6765
+
+        // 这个递归函数是用来求 前n项 和的
+        // 要求第n项的前n项和，就得用 n + 前n-1项 的和，对于每一项（除第一项）都是这样
+        // 第一项就是 可以用来求前2项和（2+第一项）
+        function sum(n) {
+            if(n === 0) return 0
+            return n + sum(n - 1)
+        }
+        log(sum(100));
+        // -> 5050
+
+        // 使用递归写循环
+        function loop(i = 0) {
+            if(i >= 10) return i
+            return loop(i + 1)
+        }
+        log(loop());
+        // -> 10
+
+        // 使用递归反转数组
+        // 这个递归就是用来返回一个数组的
+            // 什么样的数组：经过了反转的数组，因此我们怎么处理，将数组的最后一项放到要返回的数组中
+        function reverse(arr) {
+            if(arr.length === 1) return [...arr]
+            return [arr[arr.length - 1],...reverse(arr.slice(0,-1))]
+        }
+        log(reverse([1, 2, 3, 4, 5]));
+        // -> [ 5, 4, 3, 2, 1 ]
+
+        // 使用递归验证回文字符串
+        const str = 'yakay';
+
+        function isPalindrome(str) {
+            if(str.length <= 1) return true
+            return str[0] === str[str.length - 1] && isPalindrome(str.slice(1,-1))
+        }
+        log(isPalindrome(str));
+        // -> true
+    </script>
+</body>
+</html>

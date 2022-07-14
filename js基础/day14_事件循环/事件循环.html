@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        setTimeout(() => console.log(4));
+
+        new Promise((f) => {
+            // promise 初始化为同步执行
+            console.log(0);
+            f();
+        }).then(
+            function seccuss(respon){
+                console.log(2);
+                Promise.resolve().then(() => {
+                    console.log(3)
+                    seccuss()
+                });
+                
+            }, 
+            () => {
+                console.log(9);
+                Promise.resolve().then(() => console.log(3));
+            }
+        );
+
+        console.log(1);
+        // 1, 2, 3, 4
+    </script>
+</body>
+</html>

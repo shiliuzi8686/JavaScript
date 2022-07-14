@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>红绿灯</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        outline: none;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .box {
+        width: 300px;
+        height: 300px;
+        background-color: black;
+      }
+
+      .box-bg-red {
+        background-color: red;
+      }
+
+      .box-bg-yellow {
+        background-color: yellow;
+      }
+
+      .box-bg-green {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box"></div>
+    <script>
+        const {log} = console
+      const box = document.querySelector('.box');
+
+      const changeBgColor = (color) =>
+        new Promise((f) => {
+          setTimeout(() => {
+            box.classList.add(`box-bg-${color}`);
+            f();
+          }, 1000);
+        });
+
+      function* main() {
+        yield changeBgColor('red');
+        yield changeBgColor('yellow');
+        yield changeBgColor('green');
+      }
+
+      const iter = main();
+
+      new Promise((f) => {
+        // 这下面明明是同步代码，为什么要用Promise来封装呢
+        // 首先Promise来封装的话有一个优点，拿到结果数据后会传入到成功的回调函数中
+        // 不对，关键点应该在于：上面的生成器函数中每一块区域的代码都是对应一块异步操作
+        // 每个异步操作执行的时间不同，我们需要等上一个一部操作执行完后才执行下一块区域的代码(异步操作)
+        // 但我们其实是不知道每一块异步操作需要执行多久
+        const step = () => {
+          const result = iter.next();
+
+          if (result.done) {
+            f(result.value);
+          } else {
+            log(result)
+            return Promise.resolve(result.value).then(step);
+          }
+        };
+
+        step();
+      });
+
+    // 下面这段代码看似没问题，其实无法按照我们的需求正常执行
+    // let res = iter.next()
+    // log(res)
+    // if(!res.done){
+    //     res = iter.next()
+    //     log(res)
+    // }
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+
+        const arr = [1, [2], [3, [4]], [[[6]]]];
+
+        // log(arr.flat());
+
+        function deepFlat(arr) {
+            // arr.forEach((item,index) => {
+            //     if(item instanceof Array) arr[index] = deepFlat(arr[index])
+            //     return item
+            // })
+            // return arr
+            // let deep
+
+            // 将深度存为函数的静态属性
+            // if(!deepFlat) deepFlat.deep = 1
+            
+            // 原生扁平
+            // if(arr.some( item => item instanceof Array)){
+            //     deepFlat.deep++
+            //     arr = arr.filter(item => item instanceof Array)
+            //     arr = []
+            // }
+
+            // 获取数组结构的深度从而扁平数组
+            // if(!deepFlat) deepFlat.deep = 1
+
+            // 利用flat()递归扁平数组
+            let res = arr.flat()
+            if(res.some(item => item instanceof Array)){
+                return deepFlat(res)
+            }
+            return res
+        }
+
+        log(deepFlat(arr));
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        // 数组取交集
+        function ArrayIntersection(index){
+            if(!ArrayIntersection.cache) {
+                index = arguments.length - 1
+                log(index)
+                ArrayIntersection.cache = true
+            }
+            // ArrayIntersection.cache = false
+
+            if(index === 0) return arguments[0]
+            // arguments是类数组对象可以进行迭代,使用遍历迭代器的方法，最终得到的是一个序列
+            return [[...arguments][index]].filter( (item) => new Set([ArrayIntersection(index-1)]).has(item))
+        }
+        // let 
+        log(ArrayIntersection([1,2,3,4,5],[2,3,4],[2,3]))
+    </script>
+</body>
+</html>

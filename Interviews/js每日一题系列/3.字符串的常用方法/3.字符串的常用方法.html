@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let stringValue = "hello ";
+        let result = stringValue.concat("world");
+        // console.log(result); // "hello world"
+        // console.log(stringValue); // "hello"
+
+        let stringValue1 = "hello world";
+        // console.log(stringValue1.slice(3)); // "lo world"
+        // console.log(stringValue1.substring(3)); // "lo world"
+        // console.log(stringValue1.substr(3)); // "lo world"
+        // console.log(stringValue1.slice(3, 7)); // "lo w"
+        // console.log(stringValue1.substring(3,7)); // "lo w"
+        // console.log(stringValue1.substr(3, 7)); // "lo worl"
+
+        let stringValue2 = " hello world ";
+        // let trimmedStringValue = stringValue2.trim();
+        let trimmedStringValue = stringValue2.trimLeft();
+        console.log(stringValue2); // " hello world "
+        console.log(trimmedStringValue); // "hello world"
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+
+        this.name = 'windowName'
+        this.age = 'windowAge'
+
+        Function.prototype.myCall = function (thisArg, ...args) {
+            let temp = Symbol('this')
+
+            // null或undefined
+            if(thisArg === null || thisArg === undefined) {
+                this(...args)
+                return
+            }
+            // 原始值则进行包装
+            if(Object(thisArg) !== thisArg) {
+                let newThisArg = Object(thisArg)
+                // 这个符号属性打印出来的函数为什么 arguments、caller 均为null呢？这个打印出来的arguments、caller是对象的属性，而我们通常用的是函数体内部的arguments相当于关键字
+                // 我其实是传了参数的
+                newThisArg[temp] = this
+                newThisArg[temp](...args)
+                // delete newThisArg[temp]
+                return
+            }
+            
+            thisArg[temp] = this
+            let res = thisArg[temp](...args)
+            delete thisArg[temp]
+            return res?res:undefined
+        }
+        function test(name,age){
+            log(this)
+            log(name)
+            log(age)
+            return this
+        }
+        let obj = {
+            name:'小刘',
+            age:3
+        }
+        // test(obj.name,obj.age)
+        // log(test.bind(obj))
+        // test(obj.name,obj.age)
+        log(test.myCall('obj123','小刘',3))
+        // log(test.myCall(obj))
+        // log(test.myCall())
+    </script>
+</body>
+</html>

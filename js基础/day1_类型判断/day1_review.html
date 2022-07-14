@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /**
+         * 
+         * @param {value} 任何类型 一个值
+         * @return {String类型} value的类型 
+         */
+
+        function getType(value) {
+            // 主要是准备利用 typeof
+            if(value===null) return 'null'
+
+            const typeofValue = typeof value
+
+            if(typeofValue==='object') return Object.prototype.toString.call(value).slice(8,-1)
+
+            return typeofValue
+        }
+        // let test = undefined
+        // let test = null
+        // let test = '123'
+        // let test = 123
+        // let test = false
+        // let test = Symbol('111')
+        // let test = BigInt(9999999999)
+        // let test = () => {}
+        // let test = {}
+        // let test = []
+        // log(getType(test))
+
+        /**
+         * question:
+         * 1.Symbol是一个内置对象，也是一个内置的构造函数吗?---->函数本质上就是对象数据类型
+         * 2.BigInt是基于什么原理
+         */
+
+        /**
+         * 模拟instanceof
+         * @param1 {对象}
+         * @param2 {构造函数}
+         * 思路：A instance B --- true 
+         *  则A是B的一个实例,例 [] instanceof Object--true ,应该是沿着原型链查找的
+         *  实例对象是有一条原型链的
+         *  判断B的原型是不是在A的原型链上
+         */
+        function myInstanceOf(myObject, myConstructor) {
+            let curProto = Object.getPrototypeOf(Object)
+            // // while(myObject.)
+            while(curProto){
+                if(curProto === myConstructor.prototype) return true
+                curProto = Object.getPrototypeOf(curProto)
+            }
+            return false
+        }
+
+        // log(myInstanceOf({},Object))
+        // log(myInstanceOf([],Object))
+        // log(myInstanceOf(()=>{},Object))
+        // log(myInstanceOf([],Array))
+        // log(myInstanceOf(()=>{},Array))
+
+        // let value = JSON.stringify( {
+        //     code:0
+        // } ) // String
+        // let value = new JSON()  //error：JSON is not a constructor
+        // let value = JSON  //JSON
+        // let value = globalThis  //window
+        // let value = new Date() //Date，此时创建了Date实例对象，因此拿的就是Date实例对象的原型Date
+        let value = Date //Function,此时是构造函数，函数的原型都是Function
+        // let value = new Math()  //error：Math is not a constructor
+        // let value = Math  //Math
+        // let value = Math.floor(2.6) //Number
+        log(Object.prototype.toString.call(value).slice(8,-1))
+    </script>
+</body>
+</html>

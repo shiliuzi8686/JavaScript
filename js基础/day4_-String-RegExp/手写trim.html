@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /**
+         * 思路一：
+         *  根据Unicode编码判断字符串头部是不是空格
+         *  然后找到非空格的头部和尾部进行字符串切片
+        */
+        // String.prototype.myTrim = function () {
+        //     // 初始开始剪切的位置
+        //     let start = 0
+        //     // 初始剪切的末尾
+        //     let end = this.length - 1
+        //     let i = 0
+        //     // 用空格的Unicode编码，来判断
+        //     while((inputStr[i] === '\u3000' || inputStr[i] === '\u00A0' || inputStr[i] === '\u0020')){
+        //         i++
+        //         start++
+        //     }
+        //     i = this.length - 1
+        //     while((inputStr[i] === '\u3000' || inputStr[i] === '\u00A0' || inputStr[i] === '\u0020')){
+        //         i--
+        //         end--
+        //     }
+        //     end++
+        //     // start索引处剪切，end索引处不剪切
+        //     log(start,end)
+        //     return this.substring(start,end)
+        // };
+
+        /**
+         * 思路二：使用正则表达式
+         *  找到第一个非空白符和最后一个非空白符的索引
+         *  找到start和end
+        */
+        String.prototype.myTrim = function () {
+            // 初始开始剪切的位置
+            let start = 0
+            // 初始剪切的末尾
+            let end = this.length - 1
+            // 拿到原始值
+            let str = this.valueOf()
+
+            let reg1 = /\S/       //匹配第一个非空白符
+            let reg2 = /\S\s+$/   //匹配最后一个以空白符结尾的非空白符
+            
+            start = reg1.exec(str).index
+            end = reg2.exec(str).index
+            end++
+            // start索引处剪切，end索引处不剪切
+            // log(start,end)
+            return this.substring(start,end)
+        };
+        const inputStr = '  hello, world! ';
+        log(inputStr.myTrim());
+        log(inputStr.myTrim().length);
+    </script>
+</body>
+</html>

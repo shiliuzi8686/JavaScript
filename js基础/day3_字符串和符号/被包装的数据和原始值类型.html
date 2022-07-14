@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        let str = 'hello'
+        let num = 123
+        let bool = false
+        let strObj = new String('hello')
+        let numObj = new Number(123)
+        let boolObj = new Boolean(false)
+        log(str)
+        log(num)
+        log(bool)
+        log(strObj)
+        log(numObj)
+        log(boolObj)
+        log(typeof str)      //'string'
+        log(typeof num)      //'number'
+        log(typeof bool)     //'boolean'
+        log(typeof strObj)   //'object'
+        log(typeof numObj)   //'object'
+        log(typeof boolObj)  //'object'
+        // Object.prototype.toString（只有对象身上才有这个方法），将原始值作为对象来使用，会被自动包装成一个对象
+        log(Object.prototype.toString.call(str).slice(8,-1))     //'String'
+        log(Object.prototype.toString.call(num).slice(8,-1))     //'Number'
+        log(Object.prototype.toString.call(bool).slice(8,-1))    //'Boolean'
+        log(Object.prototype.toString.call(strObj).slice(8,-1))  //'String'
+        log(Object.prototype.toString.call(numObj).slice(8,-1))  //'Number'
+        log(Object.prototype.toString.call(boolObj).slice(8,-1)) //'Boolean'
+        // 没有进行隐式包装
+        log(str instanceof Object)    //false
+        log(num instanceof Object)    //false
+        log(bool instanceof Object)   //false
+        log(strObj instanceof Object) //true
+        log(numObj instanceof Object) //true
+        log(boolObj instanceof Object)//true
+        // 没有进行隐式包装，自然就不是String的实例；只是一个原始值，不是谁的实例，没有__proto__属性
+        log(str instanceof String)    //false
+        log(num instanceof Number)    //false
+        log(bool instanceof Boolean)  //false
+    </script>
+</body>
+</html>

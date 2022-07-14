@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="./Promise手写.js"></script>
+    <script>
+        const {log} = console
+
+        new myPromise( (resolve,reject) => {
+            setTimeout( () => {
+                resolve('喝茶')
+            },1000)
+        })
+        .then(
+            value => {
+                log('成功的结果：',value)
+                return new myPromise( (resolve,reject) => {
+                    setTimeout( () => {
+                        reject('吃酒')
+                    },1000)
+                })
+            },
+            reason => {
+                log('失败的原因：',reason)
+                return new myPromise( (resolve,reject) => {
+                    setTimeout( () => {
+                        resolve('吃酒')
+                    },1000)
+                })
+            }
+        )
+        .then(
+            value => {
+                log('成功的结果：',value)
+                return new myPromise( (resolve,reject) => {
+                    setTimeout( () => {
+                        resolve('睡觉')
+                    },1000)
+                })
+            },
+            reason => {
+                log('失败的原因：',reason)
+                return new myPromise( (resolve,reject) => {
+                    setTimeout( () => {
+                        resolve('睡觉')
+                    },1000)
+                })
+            }
+        )
+        .then(
+            (value) => {
+                log('成功的结果：',value)
+            },
+            reason => {
+                log('失败的原因：',reason)
+            }
+        )
+    </script>
+</body>
+</html>

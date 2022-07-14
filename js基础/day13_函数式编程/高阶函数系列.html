@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /**高阶函数的意义
+            将每一个过程抽象，可以屏蔽细节，只需要关注要实现的目标，高阶函数用来抽象通用的问题
+            函数更灵活
+            常用的高阶函数：map forEach filter every some find/findIndex reduce sort ...
+        */
+
+        /** 可以把函数作为参数传递给另一个函数 */
+        // 模拟实现 forEach
+        // 功能：遍历数组每一个元素并做相应处理
+        function foreach (array, fn) {
+            for(let i = 0;i < array.length;i++){
+                fn(array[i])
+            }
+        }
+
+        let arr = [2, 4, 6, 8]
+        foreach(arr, item => {
+            console.log(item);
+        });
+        // 模拟实现 filter
+        // 功能：过滤数组中满足条件的元素
+
+        function filter(arr, fn) {
+            let reasult = [];
+            for(let item of arr){
+                fn(item) && reasult.push(item)
+            }
+            return reasult;
+        }
+        let newArr = filter(arr, item => item > 5)
+        // 优势：功能灵活，可重复调用；
+
+        /** 可以把函数作为另一个函数的返回结果 */
+        //例1：
+        function makeFn() {
+            let msg = "hello";
+            return () => console.log(msg);
+        }
+        const fn = makeFn();
+        fn();
+        // 或者
+        makeFn()()
+        //例2：
+        // once 函数，只执行一次，例如支付时，一个订单只能支付一次
+        function once(fn) {
+            let done = false;
+            return function () {
+                if(!done){
+                    done = true;
+                    return fn.apply(this, arguments);
+                }
+            }
+        }
+        let pay = once(money => {
+            console.log(money);
+        })
+        pay(10)
+
+        // 模拟高阶函数
+        // map 对数组遍历，处理后返回新数组（对每一项处理并返回）
+        let arr = [2, 4, 6, 8, 10];
+        const map = (arr, fn) => {
+            let result = [];
+            for(let item of arr) {
+                result.push(fn(item));
+            }
+            return result;
+        }
+        let newArr = map(arr, item => item * 2)
+
+        // every 遍历数组，判断元素是否满足条件，都满足条件返回 true
+        const every = (arr, fn) => {
+            let result = true;
+            for(let item of arr) {
+                result = fn(item);
+                if(!result){
+                    break;
+                }
+            }
+            return result;
+        }
+        let everyBool = every(arr, item => item > 2)
+
+        // some 遍历数组，判断元素是否满足条件，都满足条件返回 true
+        const some = (arr, fn) => {
+            let result = false;
+            for(let item of arr) {
+                result = fn(item);
+                if(result){
+                    break;
+                }
+            }
+            return result;
+        }
+        let someBool = some(arr, item => item > 2)
+    </script>
+</body>
+</html>

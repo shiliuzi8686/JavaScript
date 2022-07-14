@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+
+        function deepClone(value) {
+            // 原始值和函数无法克隆，直接返回
+            //对对象进行包装就是它本身，对原始值进行包装会包装成一个对象（字面量定义的字符串、数字、布尔值，其实一开始都是原始值，但为啥可以调用valueOf和其它方法呢，这种原始值就是在需要被当成对象来使用的时候会自动被包装对应的包装类型成为对象；但是通过构造函数创建的字符串等就直接显式包装成对象了，创建出来的实例可以调用方法）
+            if (Object(value) !== value || value instanceof Function) return value;
+
+            // 在 deepClone 函数上创建一个缓存，用来记忆已经克隆过的对象
+            if (!deepClone.cache) deepClone.cache = new WeakSet();
+
+            // 如果已经克隆了这个对象，就直接返回
+            if (deepClone.cache.has(value)) return value;
+
+            // 如果缓存没有这个对象，就在 cache 中存下
+            deepClone.cache.add(value);
+
+            // 对于对象，先根据它的原型创建一个拷贝
+            const result = Object.create(Object.getPrototypeOf(value));
+
+            // 再将对象上的属性复制到拷贝上
+            // 因为，对象的属性值也可能是一个对象，因此需要递归
+            Object.keys(value).forEach((key) => (result[key] = deepClone(value[key])));
+
+            return result;
+        }
+
+        // 输入 1
+        // const articles = [
+        //     {
+        //         title: '深拷贝',
+        //         subTitle: '怎么实现深拷贝',
+        //         authorInfo: {
+        //         name: 'trigold',
+        //         id: 123456789,
+        //         },
+        //         content: '深拷贝是指深层的拷贝方式...',
+        //     },
+        //     {
+        //         title: '原型链',
+        //         subTitle: '怎么实现寄生式组合继承',
+        //         authorInfo: {
+        //         name: 'trigold',
+        //         id: 123456789,
+        //         },
+        //         content: '寄生式组合继承是流行的继承方式...',
+        //     },
+        // ];
+        
+        const articles = new String('hello')
+        const articlesCopy = deepClone(articles);
+        log(articlesCopy); //可以实现对包装的三种数据类型的深拷贝
+
+        // 输入2：测试循环引用
+        function CircularReferedObj() {
+            this.info = 'foo';
+            this.circular = this;
+        }
+
+        // const circularReferedObj = new CircularReferedObj();
+        // log(circularReferedObj.circular.circular.circular.circular.info);
+
+        // const circularReferedObjCopy = deepClone(circularReferedObj);
+        // log(circularReferedObjCopy);
+    </script>
+</body>
+</html>

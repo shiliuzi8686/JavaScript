@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /** 场景 */
+        // var name="lucy";
+        // var obj={
+        //     name:"martin",
+        //     say:function () {
+        //         console.log(this.name);
+        //     }
+        // };
+        // obj.say(); //martin，this指向obj对象
+        // setTimeout(obj.say.bind(obj),0) //martin,this指向obj对象
+        // setTimeout(obj.say,0); //lucy，this指向window对象
+
+        /** apply */
+        function fn (...arg){
+            console.log(this,arg)
+        }
+        let obj = {
+            myName:'唐三'
+        }
+        // fn(1,2) //window,[1,2]
+        // fn.apply(obj,[1,2]) //obj,[1,2]
+        // fn.apply(null,[1,2]) //obj,[1,2]
+        // fn.apply(undefined,[1,2]) //obj,[1,2]
+
+        // 测试Function是一个构造函数，它的实例是一个函数
+        let fn1 = new Function()
+        // console.log(fn1)
+        
+        /** 手写一个call方法 */
+        Function.prototype.call1 = function(){
+            //1.找到未来的 this 指向，即arguments[0],
+            // 如果没有传入任何参数，那么我们将this指向window，
+            // 如果传入的类型是string、number、boolean我们要对其进行包装
+            let target = arguments[0] !== undefined ? Object(arguments[0]) : window  //经过这一步操作后，target现在是对象类型
+            // let target = Object(arguments[0]) || window  //经过这一步操作后，target现在是对象类型
+            //2.找到未来要执行的函数，并改变其this指向
+            target.fn = this  //b方法的this指向，指向了target
+            //3.把除了 arguments[0] 以外的参数传入要执行的函数，并执行函数
+            let params = []
+            for(let i = 1;i < arguments.length;i++){
+                params.push(arguments[i])
+            }
+            //将字符串转换成js代码并执行
+            let result = eval("target.fn(" + params + ")")
+            delete target.fn
+            return result 
+        }
+        function a(){
+            console.log('this 指向：',this)
+            console.log('执行了：a函数')
+            console.log('传入的参数是：',arguments)
+        }
+        function b(){
+            console.log('this 指向：',this)
+            console.log('执行了：b函数')
+            console.log('传入的参数是：',arguments)
+        }
+        // b.call1(a)
+
+        /**  bind */
+        // function fn2(...args){
+        //     console.log(this,args);
+        // }
+        // let obj2 = {
+        //     myname:"张三"
+        // }
+        // const bindFn = fn2.bind(obj2); // this 也会变成传入的obj ，bind不是立即执行需要执行一次
+        // bindFn(1,2) // this指向obj
+        // fn(1,2) // this指向window
+
+        function fn3(){
+            console.log(this,arguments);
+        }
+        let obj3 = {
+            name:'obj3'
+        }
+        // let changedFn3 = fn3.bind(obj3,4,5,6) //返回的是一个this指向已经改变了的函数，但该函数并没有执行，同时也可以传入固定的参数
+        // changedFn3()
+
+        function fn4(){
+            console.log(this,arguments);
+        }
+        let obj4 = {
+            name:'obj4'
+        }
+        let changedFn4 = fn4.bind(obj4,4,5,6) //返回的是一个this指向已经改变了的函数，但该函数并没有执行，同时也可以传入固定的参数
+        // changedFn4(7,8,9)
+
+        // 手写一个bind
+        Function.prototype.myBind = function (context) {
+            // 判断调用对象是否为函数
+            if (typeof this !== "function") {
+                throw new TypeError("Error")
+            }
+            
+            // 获取参数,
+            const args = [...arguments].slice(1)
+            fn = this;
+
+            return function Fn() {
+
+                // 根据调用方式，传入不同绑定值
+                return fn.apply(this instanceof Fn ? new fn(...arguments) : context, args.concat(...arguments)); 
+            }
+        }
+
+        Function.prototype.selfBind = function (thisContext){
+            //判断调用对象是否为函数
+            if(typeof this !== 'function'){
+                throw new TypeError('Error')
+            }
+            //获取参数
+            const args = [...arguments].slice(1)
+            //获得当前函数对象
+            fn = this
+
+            return function(){
+                //根据调用方式，传入不同绑定值
+                return fn.apply(thisContext,args.concat(...arguments))
+            }
+        }
+
+        function fn5(){
+            console.log(this,arguments);
+        }
+        let obj5 = {
+            name:'obj5'
+        }
+        let changedFn5 = fn5.myBind(obj5,'a','b','c')
+        changedFn5('d','e','f')
+    </script> 
+</body>
+</html>

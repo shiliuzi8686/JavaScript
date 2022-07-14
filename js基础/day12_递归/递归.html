@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+
+        /** factorial（阶乘）函数 */
+        function factorial(n) {
+            if(n === 0) return 1
+            return n*arguments.callee(n - 1)
+        }
+        // log(factorial(0));
+        // log(factorial(1));
+        // log(factorial(10));
+        // -> 3628800
+
+        /** 使用递归写 fibonacci(斐波那契) 函数 */
+        // 思路要清晰：怎么拿到前一个值
+        function fabonacci(n) {
+            // // 当前轮要加的数
+            // let sum
+
+            // if(!fabonacci.i) fabonacci.i = 1
+
+            // if(fabonacci.i > n) return sum
+
+            // if(fabonacci.i === 1) sum = 1
+            // if(fabonacci.i === 2) sum = 1
+
+            // fabonacci.i++
+            // return fabonacci(n) + sum
+
+            if(n === 1) return 1
+            if(n === 2) return 1
+            // 下面的每一个 fabonacci(n - 1) 值，也都是通过 递归前两项的和 得来的
+            return fabonacci(n - 1) + fabonacci(n - 2)
+        }
+
+        // log(fabonacci(20));
+        // -> 6765
+
+        /** 使用递归写 sum 函数 */
+        function sum(n) {
+            if(n === 0) return 0
+            return sum(n - 1) + n
+        }
+
+        // log(sum(100));
+        // -> 5050
+
+        /** 使用递归写循环 */
+        function loop(i = 0) {
+            if(i >= 10) return i
+            return loop(i + 1)
+        }
+        // for(var i = 0;i < 10;i++){} log(i)
+
+        // log(loop());
+        // -> 10
+
+        /** 使用递归反转数组 */
+        function reverse(arr) {
+            // 设置交换的次数
+            if(reverse.i === undefined) reverse.i = Math.floor(arr.length/2) - 1
+
+            if(reverse.i < 0) return arr
+
+            // 数组中对应两个元素交换
+
+            let temp
+            // 两个元素的索引加起来为 length-1
+            temp = arr[(arr.length) - 1 - (reverse.i)]
+            arr[(arr.length) - 1 - (reverse.i)] = arr[reverse.i]
+            arr[reverse.i] = temp
+            
+            // [ arr[reverse.i] , arr[(arr.length) - 1 - (reverse.i)] ] = [ arr[(arr.length) - 1 - (reverse.i)] , arr[reverse.i]]
+            reverse.i--
+            return reverse(arr)
+        }
+
+        log(reverse([1, 2, 3, 4, 5]));
+        // -> [ 5, 4, 3, 2, 1 ]
+
+        /** 使用递归验证回文字符串 */
+        const str = 'yakay';
+
+        function isPalindrome(str) {
+            // 设置比对的次数
+            if(reverse.i === undefined) reverse.i = Math.floor(str.length/2) - 1
+
+            // 所有都对比完，则为true
+            if(reverse.i < 0) return true
+
+            if(str.at(reverse.i) !== str.at(str.length-1-reverse.i)) return false
+            reverse.i--
+
+            return isPalindrome(str)
+        }
+
+        // log(isPalindrome(str));
+        // -> true
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /**
+         * 求解数组中每个元素的和
+        */
+        function sum(array,index){
+            if(index == 0) return array[0]
+            return array[index] + sum(array,index-1)
+            // 为啥这个不能使用--? 使用index--就修改了当前递归函数中index的值，
+            // 最终递归函数，达到了终止条件会层层return的，当前函数的index值发生改变，则读取到的数组的值就会发生改变导致，最终结果错误
+            // return array[index] + sum(array,index--)
+        }
+        log(sum([1,2,3,4,5],[1,2,3,4,5].length - 1))
+    </script>
+</body>
+</html>

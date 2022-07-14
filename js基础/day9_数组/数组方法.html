@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+
+        /** 静态方法 */
+        // Array.from()
+        // function arrArgu () {
+        //     log(Array.from(arguments))
+        // }
+        // arrArgu('hh','ok',1,{})
+
+        // function arrArgu () {
+        //     log(arguments)
+        //     log(Array.of(arguments))
+        // }
+        // arrArgu('hh','ok',1,{})
+
+        // Array.of()
+        // log(Array.of(1,2,3,4,5)) //[1, 2, 3, 4, 5]
+
+        /** 搜索和位置方法 */
+        // indexOf()
+        // lastIndexOf()
+        // includes()
+        // let numbers = [1,2,3,4,5,4,3,2,1]
+        // log(numbers.indexOf(4,4)) //5
+        // log(numbers.lastIndexOf(4,4)) //3
+        // log(numbers.includes(4,7)) //false
+
+        // find()
+        // findIndex()
+        // const people = [
+        //     {
+        //         name:'hhh'
+        //     },
+        //     {
+        //         name:'jane'
+        //     }
+        // ]
+        // log(people.find((item) => item.name==='jane'))      //{ name: 'jane' }
+        // log(people.findIndex((item) => item.name==='jane')) //1
+
+        /** 操作方法 */
+            // concat()
+        // log(([].concat('1',['2','3'],[],[[1]]))) //['1', '2', '3', [1]]
+            // slice()
+        // let arr = [
+        //     {
+        //         name:'Jane'
+        //     },
+        //     1,
+        //     'hh'
+        // ]
+        // let res = arr.slice()
+        // res[0].name = 'Jane changed'
+        // log(res[0].name)
+        // log(arr[0].name)
+            // splice(),删除
+        // let arr2 = ['1','2','3','4']
+        // let res2 = arr2.splice(2,1)//删除元素 '3'
+        // log(res2); //[ '3' ]
+        // log(arr2); //[ '1', '2', '4' ]
+            // splice(),新增
+        // let arr3 = ['a','b','c','d']
+        // let res3 = arr3.splice(2,0,'1','2','3') //在index为2处新增元素
+        // log(res3); //[]
+        // log(arr3); //[ 'a', 'b', '1', '2', '3', 'c', 'd' ]
+            // splice(),修改
+        // let arr3 = ['a','b','c','d']
+        // let res3 = arr3.splice(2,1,'修改') //在修改index为2处元素
+        // log(res3); //['c']
+        // log(arr3); //['a', 'b', '修改', 'd']
+
+        /** 迭代方法  */
+            // map()
+        // log([undefined, null, false, '', 0, {},[],function(){}].map( (value) => {
+        //     // 考虑null
+        //     if(value === null) return 'null' //返回的应该是一个小写的字符串
+
+        //     const typeOfValue = typeof value
+
+        //     // Object类型或其他特殊对象使用万能方法
+        //     if (typeOfValue === 'object') return Object.prototype.toString.call(value).slice(8,-1)
+
+        //     // 对于其他原始类型，直接使用typeof
+        //     return typeOfValue
+        // })) //['undefined', 'null', 'boolean', 'string', 'number', 'Object', 'Array', 'function']
+
+        // log(typeof {}) //'object'
+        // log(Object.prototype.toString.call({}).slice(8,-1)) //'Object'
+
+            // filter()
+        // log([1,2,3,4,5,6].filter( item => item < 5)) //[1, 2, 3, 4]
+        
+            // every()
+        // log([1,2,3,4,5,6].every( item => item < 5)) //false
+
+            // some()
+        // log([1,2,3,4,5,6].some( item => item < 5)) //true
+
+            // forEach()
+
+
+        /** 迭代器方法 */
+        // log(...[1,'2','ok'].keys())    // 0 1 2
+        // log(...[1,'2','ok'].values())  // 1 '2' 'ok'
+        // log(...[1,'2','ok'].entries()) // [0, 1] [1, '2'] [2, 'ok']
+
+        /** 顺序相关方法 */
+        log([1,2,3,4,5].reverse()) //[5, 4, 3, 2, 1]
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /**
+         * 模拟 trim 方法
+         * 思路：
+         *  找到所有的头尾空白符，用空串替换
+        */
+        String.prototype.myTrim = function () {
+            const whiteSpaceToTrimPattern = /(^\s+)|(\s+$)/g;
+            log(whiteSpaceToTrimPattern)
+            // replace中传入的是一个正则，第一个参数可以是一个正则也可以是一个字符串
+            return this.valueOf().replace(whiteSpaceToTrimPattern, '');
+        };
+
+        // const inputStr = '  hello, world! ';
+        // console.log(inputStr.myTrim());
+
+        // test
+            // var str = "John Smith";
+            // var pattern4 = /(\w+)\s(\w+)/;
+            // log(pattern4.exec(str))
+            // var newStr4= str.replace(pattern4, 'zyp').length //得到newStr4的结果为"zyp"
+            // log(newStr4)
+
+        /**
+         * 手写一个识别数值类型字符串的算法
+        */
+        function isNumbericStr(str) {
+            const symbolPattern = /(\+|-)/; 
+            const digits = /(\d+)/;
+            const realNumberPattern = new RegExp(
+                `${symbolPattern.source}?${digits.source}(\.${digits.source})?`,
+            );
+            const numbericPattern = new RegExp(
+                `^${realNumberPattern.source}((e|E)${symbolPattern.source}?${digits.source})?$`,
+            );
+            return numbericPattern.test(str);
+        }
+
+
+
+
+
+        // const inputStrTest = '0';
+        // const inputStrTest = '0.1';
+        // const inputStrTest = '+12.1';
+        // const inputStrTest = '-12.01';
+        // const inputStrTest = '-78.23e-17';
+        const inputStrTest = '-89.e+10';
+        log(isNumbericStr(inputStrTest))
+
+        // const inputStr1 = '-78.23e-17';
+        // const inputStr2 = '-89.e+10';
+
+        // log(isNumbericStr(inputStr1), isNumbericStr(inputStr2));
+        // -> true false
+
+    </script>
+</body>
+</html>

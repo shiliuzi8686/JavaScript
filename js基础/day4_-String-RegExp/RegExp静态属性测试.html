@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        
+        // 通过构造函数的$1和$2属性拿到两个捕获组匹配的内容：
+        // let text = 'this has been a short summer'
+        // let pattern = /(..)or(.)/g
+        // if(pattern.test(text)){
+        //     log(RegExp.$1)
+        //     log(RegExp.$2)
+        // }
+
+        // 有两个正则表达式，RegExp捕获组匹配的内容被覆盖
+        let text = 'this has been a short summer'
+        let pattern = /(..)or(.)/g
+        let pattern2 = /(.)hi/g
+        if(pattern.test(text) && pattern2.test(text)){
+            log(RegExp.$1)
+            // log(RegExp.$2)
+            // log(RegExp.$3)
+            // log(typeof RegExp.$4)
+        }
+
+    </script>
+</body>
+</html>

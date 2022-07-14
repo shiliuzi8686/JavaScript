@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function foo() {
+        const funcName = arguments.callee.name;
+        if (new.target) {
+            throw `函数${funcName}不能用作构造函数！`;
+        } else {
+            console.log(`函数${funcName}用为非构造函数！`);
+        }
+        }
+
+        // new foo();
+        foo();
+    </script>
+</body>
+</html>

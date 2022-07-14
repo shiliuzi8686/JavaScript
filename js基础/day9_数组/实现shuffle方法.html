@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const { log } = console;
+        /**
+         * 思路：
+         *  现在数组中随机抽一个元素，与数组的末尾元素交换
+         *  再在数组前倒数第二个中随机抽一个，与倒数第二个元素进行交换
+         *  依次至只剩一个
+        */
+        function shuffle(arr) {
+            // 随机抽到的元素要放的位置
+            let count = arr.length - 1
+            // 乱序
+            while(count > 0){
+                let randomNum = Math.floor(Math.random()*(count+1))
+                // 随机抽到的元素与最后一个元素进行交换
+                let temp
+                temp = arr[randomNum]
+                arr[randomNum] = arr[count]
+                arr[count] = temp
+                count--
+            }
+            return arr
+        }
+
+        const nums = [1, 2, 3, 4, 5];
+        log(shuffle(nums));
+    </script>
+</body>
+</html>

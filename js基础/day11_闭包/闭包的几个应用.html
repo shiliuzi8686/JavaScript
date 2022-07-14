@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        
+        // ES5闭包模拟class
+        // 注意不同位置的参数！！！
+            // var name = 'windowName'
+            // var age = 'windowAge'
+            // const Person = (function(name,age){
+            //     const myConstructor = function(){
+            //         this.name = name
+            //         this.age = age
+            //     }
+            //     return myConstructor
+            // })(name,age)
+            // let person1 = new Person()
+            // log(person1)
+        const Person = (function(){
+            const myConstructor = function(name,age){
+                this.name = name
+                this.age = age
+            }
+            // 还可以往构造函数的原型上添加方法，所有new关键字创建的实例均可以使用
+            // myConstructor.prototype.introduce = () => { this } //匿名函数就相当于在在全局中直接调用的函数，this指向全局对象
+            // 若要用到实例身上的属性和方法，则不能使用箭头函数
+            myConstructor.prototype.introduce = function(){
+                // 此时的this指向的就是 Person 构造函数的实例对象
+                log(`介绍自己：${this.name}-${this.age}`)
+            }
+            return myConstructor
+        })()
+        let person1 = new Person('小刘',3)
+        // log(person1)
+        // person1.introduce()
+
+        // 模块模式
+        // 这个匿名函数写成箭头函数应该也是一样的(对于this指向)
+        const exposureA = ( function(){
+            let a
+            let _a = 'private A'
+            const funcA = function (){
+                log('funcA')
+            }
+            const _funcA = function (){
+                log('_funcA')
+            }
+            return {
+                get a(){
+                    return a
+                },
+                set a(newValue){
+                    a = newValue
+                },
+                funcA
+            }
+        })()
+        log(exposureA)
+        exposureA.a = 'a changed'
+        log(exposureA.a)
+        exposureA.funcA()
+    </script>
+</body>
+</html>

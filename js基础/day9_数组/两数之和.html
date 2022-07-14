@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /**
+         * 输入：int[]，如，[3,2,4]。target，如：9。 
+         * 效果：找出和为目标值 target 的那两个整数，并返回它们的数组下标。 
+         * 输出：下标数组。
+        */
+        // const arr = [1,2,3,4,5,6,7,8,9];
+        // const target = 17;
+        // function twoSum(arr,target){
+
+        // }
+
+        const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const target = 17;
+
+        function twoSum(nums, target) {
+        const map = new Map();
+        const len = nums.length;
+        let i = 0;
+
+        while (i < len) {
+            const intToFind = target - nums[i];
+
+            if (map.has(intToFind)) {
+            return [map.get(intToFind), i];
+            }
+
+            map.set(nums[i], i);
+            i += 1;
+        }
+        }
+
+        console.log(twoSum(nums, target));
+        // -> [ 7, 8 ]
+    </script>
+</body>
+</html>

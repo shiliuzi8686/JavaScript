@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const { log } = console;
+
+        // 输入两个巨大的整数型字符串
+        const bigInt1StrInput = '7'.repeat(20);
+        const bigInt2StrInput = '5'.repeat(15);
+
+        // 输出一个正确的字符串表示相加结果
+        function add(bigInt1Str, bigInt2Str) {
+            // 先进行规范化，将位数少的整数前面补 0，最终使得位数和较大那个数一致
+            const bigInt1StrNormal =
+                bigInt1Str.length < bigInt2Str.length
+                ? bigInt1Str.padStart(bigInt2Str.length, '0')
+                : bigInt1Str;
+
+            const bigInt2StrNormal =
+                bigInt2Str.length < bigInt1Str.length
+                ? bigInt2Str.padStart(bigInt1Str.length, '0')
+                : bigInt2Str;
+
+            // 每一位的加数1
+            let adden1 = 0;
+
+            // 每一位的加数2
+            let adden2 = 0;
+
+            // 每一位的和是否发生进位
+            let isCarried = false;
+            const result = [];
+
+            for (let i = bigInt1StrNormal.length - 1; i >= 0; i -= 1) {
+                adden1 = Number.parseInt(bigInt1StrNormal[i]);
+                adden2 = Number.parseInt(bigInt2StrNormal[i]);
+                const sum = adden1 + adden2 + Number(isCarried);
+                isCarried = sum > 9;
+
+                // 每一位的结果是：如果进位了，和就是 sum-10，否则就是 sum，
+                result.unshift(isCarried ? sum - 10 : sum);
+            }
+
+            // 最后检查进位，如果进位在最前面补 1
+            if (isCarried) result.unshift(1);
+
+            return result.join('');
+        }
+
+        const result = add(bigInt1StrInput, bigInt2StrInput);
+        log(result);
+    </script>
+</body>
+
+</html>

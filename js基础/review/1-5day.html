@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /** DAY1 **/
+        // getType
+        function getType(value){
+            // 考虑null
+            if(value === null) return 'null' //返回的应该是一个小写的字符串
+
+            const typeOfValue = typeof value
+
+            // Object类型或其他特殊对象使用万能方法
+            if (typeOfValue === 'object') return Object.prototype.toString.call(value).slice(8,-1)
+
+            // 对于其他原始类型，直接使用typeof
+            return typeOfValue
+        }
+
+        // 模拟instanceOf
+        function myInstance(object,constructor){
+            let proto = Object.getPrototypeOf(object) //命名可以优化为curProto当前的原型
+            // 沿着原型链查找
+            while(proto){
+                if(object === constructor.prototype) return true
+                proto = Object.getPrototypeOf(proto)
+            }
+            // 构造函数的原型不在实例的原型链上
+            return false
+        }
+
+        /** DAY2 */
+        // 手写大树相加算法
+        function myBigInt(BigIntStrInput1,BigIntStrInput2){
+            const length  = BigIntStrInput1.length >= BigIntStrInput2.length
+                            ? BigIntStrInput1.length : BigIntStrInput2.length
+            // // 加数1
+            // let add1 = 0
+            // // 加数2
+            // let add2 = 0
+            // 和
+            let sum = 0
+            // 进位
+            let isCarried = false
+            const result = [] //resul其实也可以是字符串，使用模板字符串来处理
+
+            for(let i = length - 1 ;i >= 0 ;i--){
+                sum = (+BigIntStrInput1[i] || 0) + (+BigIntStrInput2[i] || 0) + Number(isCarried)
+                isCarried = sum > 9 ? true : false
+                result.unshift(isCarried ? sum - 10 : sum) //result是字符串的话可以使用模板字符串来处理
+            }
+            // 最后一个进位
+            if(isCarried) result.unshift(1)
+
+            return result.join('')
+        }
+
+        /** DAY4 */
+        function myTrim(){
+            return this.valueOf().replace(/(^\s+|\s+$)/g,'')  //注意：这里是全局匹配;需要拿到原始值再去除头尾空白符(这里的this)
+        }
+        // 手写一个识别数值类型字符串的算法
+        function isNumbericStr(strValue){
+            return /(^[+-0-9])?\d+(\.\d+([eE]([+-])?\d+$)?)?$/.test(strValue)
+        }
+        
+        /** DAY5 */
+        // 手写深拷贝（考虑循环引用）
+        // function deepClone(obj){    
+        //     // 原始值和函数无法拷贝
+        //     if(Object(obj) !== obj || obj instanceof Function) return obj
+
+        //     // 使用缓存解决循环引用问题
+        //     if(!deepClone.cache) deepClone.cache = new Set()
+        //     if(!deepClone.cache.has(obj)) deepClone.cache.add(obj)
+        //     return obj
+            
+        //     const result = Object.create(Object.getPrototypeOf(obj))
+        //     Object.keys(obj).forEach( key => result[key] = deepClone(obj[key]))
+        //     return result
+        // }
+
+        // 注意：这里的循环引用问题具体是怎么解决的？ 
+        function deepClone(obj){
+            if(Object(obj) !== obj || obj instanceof Function) return obj
+
+            if(!deepClone.cache) deepClone.cache = new Set()
+            if(deepClone.cache.has(obj)) return obj
+            deepClone.cache.add(obj)
+
+
+            let result = Object.create(Objetc.getPrototypeOf(obj))
+            //对象每一个属性都要拷贝，引用类型则拷贝到原始值类型
+            Object.keys().forEach( key => result[key] = deepClone(obj[key])) 
+            return result
+        }
+        // Object原型上没有被重写的toString方法判断'str'
+        log(Object.prototype.toString.call('str').slice(8,-1))
+        log('str'.toString())
+    </script>
+</body>
+</html>

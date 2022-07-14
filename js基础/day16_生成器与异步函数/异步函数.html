@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 1
+        const {log} = console
+        async function a (){
+            log(1)
+            let p  = new Promise( (resolve,reject) => {
+                setTimeout( () => {
+                    resolve(3)
+                })
+            })
+            let res = await p
+            log(res)
+        }
+        // a()
+        // log(2)
+
+        // 2 ???
+        // async function async1(){
+        //     log('async1 start')
+        //     await async2()
+        //     log('async1 end')
+        // }
+        // async function async2(){
+        //     log('async2')
+        // }
+        // log('script start')
+        // setTimeout( function(){
+        //     log('setTimeOut')
+        // },0)
+        // async1()
+        // new Promise( (resolve) => {
+        //     log('Promise1')
+        //     resolve()
+        // })
+        // .then( function () {
+        //     log('Promise2')
+        // })
+        // log('script end')
+        // script start
+        // async1 start
+        // Promise1
+        // script end
+        // Promise2
+        // async2
+        // async1 end
+        // setTimeOut
+
+        // 3???
+        async function foo(){
+            log(2)
+            log(await Promise.resolve(8))
+            log(9)
+        }
+        async function bar(){
+            log(4)
+            log(await 6)
+            log(7)
+        }
+        log(1)
+        foo()
+        log(3)
+        bar()
+        log(5)
+    </script>
+</body>
+</html>

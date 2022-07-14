@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const arrayLike = {0: 'apple', 1: 'orange', 2: 'strawberry', length: 3};
+        // console.log(...Array.from(arrayLike));
+        // -> 'apple' 'orange' 'strawberry'
+
+        const iterable = {
+        name: 'Trigold',
+        age: 19,
+        job: '前端工程师',
+
+        [Symbol.iterator]() {
+            let i = 0;
+            const keys = Object.keys(this);
+
+            return {
+                next: () => ({
+                    value: this[keys[i]],
+                    // done: i++ === keys.length,
+                    done: false //直接崩溃
+                }),
+                // [Symbol.iterator]() {
+                //     return this; 
+                // }
+            };
+        },
+        };
+
+        console.log(...iterable);
+        // -> 'Trigold' 19 '前端工程师'
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const {log} = console
+        /**
+         * 
+         * @param {value} 任何类型 一个值
+         * @return {String类型} value的类型 
+         */
+
+        function getType(value) {
+            // if(value===null || undefined) return value
+
+            // if(value===null) return 'null'
+            // if(value===undefined) return 'undefined'
+            /** Object.prototype.toString.call(value).slice(8,-1)可以拿到null和undefined数据类型的字符串值 */
+            // return value instanceof Object ? Object.prototype.toString.call(value).slice(8,-1) : typeof value
+            return Object.prototype.toString.call(value).slice(8,-1)
+        }
+        let test = undefined
+        // let test = null
+        // let test = '123'
+        // let test = 123
+        // let test = false
+        // let test = Symbol('111')
+        // let test = BigInt(9999999999)
+        // let test = () => {}
+        // let test = {}
+        // let test = []
+        // log(getType(test))
+
+        /**
+         * question:
+         * 1.Symbol是一个内置对象，也是一个内置的构造函数吗?---->函数本质上就是对象数据类型
+         * 2.BigInt是基于什么原理
+         */
+
+        /**
+         * 模拟instanceof
+         * @param1 {对象}
+         * @param2 {构造函数}
+         * 思路：A instance B --- true 
+         *  则A是B的一个实例,例 [] instanceof Object--true ,应该是沿着原型链查找的
+         *  实例对象是有一条原型链的
+         *  判断B的原型是不是在A的原型链上
+         */
+        function myInstanceOf(myObject, myConstructor) {
+            // while((myObject.__proto__ !== myConstructor.prototype) && (myConstructor.__proto__ !== null)){
+            //     myConstructor = myConstructor.prototype.__proto__
+            // }
+            // return !(myConstructor.__proto__ === null)
+            // // while(myObject.)
+            while(myObject !== null && myConstructor.prototype !== myObject.__proto__){
+                myObject = myObject.__proto__
+            }
+            return !(myObject === null)
+        }
+
+        // log(myInstanceOf({},Object))
+        // log(myInstanceOf([],Object))
+        // log(myInstanceOf(()=>{},Object))
+        // log(myInstanceOf([],Array))
+        // log(myInstanceOf(()=>{},Array))
+
+        let list = ['1','2','3','4','5','6']
+        function eachOther(list){
+            for(let i = 0;i < list.length-1;i++){
+                let item = list[i]
+                let res = item
+                for(let j = i+1;j < list.length;j++){
+                    res += list[j]
+                }
+                console.log(res)
+            }
+        }
+        eachOther(list)
+    </script>
+</body>
+</html>

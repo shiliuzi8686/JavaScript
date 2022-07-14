@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /** day6 */
+        // Boolean()
+            const {log} = console
+            // const result = [undefined,null,'str','',+0,-0,NaN,Infinity,5,true,false,{},-0n,0n,2n,Symbol('test')].map(Boolean)
+            // log(...result) //打印结果序列
+            // false false true false false false false true true true false true false false true true
+
+        // String()
+            // 基本类型的数据
+                // log([undefined,null,'str','',+0,-0,NaN,Infinity,2,true,false,-0n,0n,2n,Symbol('test')].map(String))
+                // ['undefined', 'null', 'str', '', '0', '0', 'NaN', 'Infinity', '2', 'true', 'false', '0', '0', '2', 'Symbol(test)']
+            // Object类型的数据
+                // log([{},{code:200},function(){let a},[1,2,3],Object('test'),Object(123),Object(false),Object(5n)].map(String))
+                // ['[object Object]', '[object Object]', 'function(){let a}', '1,2,3', 'test', '123', 'false', '5']
+
+        // Number()
+            // 基本类型
+                // log([undefined,null,true,false,-0,+0,NaN,Infinity,'2str','3','str','',{},-0n,5n].map(Number))
+                // [NaN, 0, 1, 0, -0, 0, NaN, Infinity, NaN, 3, NaN, 0, NaN, 0, 5]
+            // Object类型
+                // log([{code:200},Object(123),Object('2'),Object('2str'),Object(true)].map(Number))
+                // [NaN, 123, 2, NaN, 1]
+        
+        /** day7 */
+            // 原型链继承
+                // function SuperType () {}
+                // SuperType.prototype.superMethods = function(){
+                //     log('superMethods')
+                // }
+                // function SubType () {}
+                // SubType.prototype = new SuperType()
+                // SubType.prototype.subMethods = function() {
+                //     log('subMethods')
+                // }
+                // let subType1 = new SubType()
+                // subType1.superMethods()
+                // subType1.subMethods()
+                // log(subType1.__proto__)
+                // log(Object.getPrototypeOf(subType1))
+                // log(subType1.__proto__.__proto__)
+            // 寄生式继承
+                // function SuperType (){}
+                // SuperType.prototype.superMethods = function(){
+                //     log('superMethods')
+                // }
+                // function SubType(){}
+                // SubType.prototype = Object.create(SuperType.prototype)
+                // let constructorValue = 'constructor'
+                // Object.defineProperty(SubType.prototype,constructorValue,{
+                //     value:SubType,
+                //     enumerable:false,
+                //     writable:true,
+                //     configurable:true
+                // })
+                // // 等价
+                // // Object.defineProperty(SubType.prototype,'constructor',{
+                // //     value:SubType,
+                // //     enumerable:false
+                // // })
+                // SubType.prototype.subMethods = function() {
+                //     log('subMethods')
+                // }
+                // let SubType1 = new SubType()
+                // SubType1.subMethods()
+                // SubType1.superMethods()
+                // log(SubType1.__proto__)
+                // log(SubType1.__proto__.__proto__)
+                // log(Object.getOwnPropertyDescriptor(SubType.prototype,'constructor'))
+            // 盗用构造函数
+                // function SuperType (name,age) {
+                //     this.name = name
+                //     this.age = age
+                // }
+                // function SubType(name,age,job){
+                //     SuperType.call(this,name,age)
+                //     this.job = job
+                // }
+                // let subType1 = new SubType('石榴',25,'front-end')
+                // log(subType1)
+            // 组合继承
+                // function SuperType(name,age){
+                //     this.name = name
+                //     this.age = age
+                // }
+                // SuperType.prototype.superMethods = function () {
+                //     log('superMethods')
+                // }
+                // function SubType(name,age,job){
+                //     SuperType.call(this,name,age)
+                //     this.job = job
+                // }
+                // SubType.prototype = new SuperType()
+                // SubType.prototype.subMethods = function(){
+                //     log('subMethods')
+                // }
+                // let SubType1 = new SubType('石榴子',18,'front-end')
+                // log(SubType1)
+
+            // 寄生式组合继承
+                // function SuperType(name,age){
+                //     this.name = name
+                //     this.age = age
+                // }
+                // SuperType.prototype.superMethods = function(){
+                //     log('superMethods')
+                // }
+                // function SubType(name,age,job){
+                //     SuperType.call(this,name,age)
+                //     this.job = job
+                // }
+                // SubType.prototype = Object.create(SuperType.prototype)
+                // Object.defineProperty(SubType.prototype,'constructor',{
+                //     value:SubType,
+                //     configurable:true,
+                //     enumerable:false,
+                //     writable:true
+                // })
+                // SubType.prototype.subMethods = function(){
+                //     log('subMethods')
+                // }
+                // let SubType1 = new SubType('石榴子',18,'front-end')
+                // log(SubType1)
+                // log(Reflect.ownKeys(SubType.prototype))
+
+            /** day8 */
+                // 手写深冻结
+                    // 'use strict';
+                    // /**
+                    //  * 注意：
+                    //  * 1.非对象类型不能冻结
+                    //  * 2.使用Reflect.onKeys()来遍历出所有的属性
+                    // */
+                    // Object.deepFreeze = function deepFreeze(obj) {
+                    //     // Object.freeze(obj)
+                    //     // ;[...Object.keys(obj)].forEach( key => {
+                    //     //     if(obj[key] instanceof Object) deepFreeze(obj[key])
+                    //     // })
+                    //     // return obj
+                    // };
+
+                    // const obj1 = {
+                    //     info: 'obj1',
+                    // };
+
+                    // const obj2 = Object.deepFreeze({
+                    //     info: 'obj2',
+                    //     obj1,
+                    // });
+
+                    // log(obj2);
+                    // obj2.obj1.info = 'obj1 changed';
+                    // log(obj2);
+
+            /** day9 */
+                // 深打平
+                    // const arr = [1, [2], [3, [4]], [[[6]]]];
+                    // // log(arr.flat());
+                    // function deepFlat(arr) {
+                    //     // return arr.reduce( (preValue,value) => {
+                    //     //     if(value instanceof Array) return preValue.concat(deepFlat(value))
+                    //     //     return preValue.concat(value)
+                    //     // },[])
+                    //     return arr.reduce( (preValue,value) => preValue.concat(Array.isArray(value) ? deepFlat(value) : value),[])
+                    // }
+                    // log(deepFlat(arr));
+                // reduce()方法
+                    // 自
+                    // Array.prototype.myReduce = function (func,initialValue) {
+                    //     // let result
+                    //     // for(let i = 0;i < this.length ;i++){
+                    //     //     result = func(initialValue)
+                    //     // }
+
+                    //     let arr = this
+                    //     if(initialValue) arr.unshift(initialValue)
+                    //     let value = func(arr[0],arr[1])
+                    //     for(let i = 2;i < arr.length;i++){
+                    //         value = func(value,arr[i])
+                    //     }
+                    //     return value
+                    // }
+                    // 佬
+                    // 归并方法最终计算的就是两个值的归并，已知一个值怎么求另一个值
+                    // Array.prototype.myReduce = function (reducer,initialValue) {
+                    //     const args = this.slice()
+                    //     if(initialValue !== undefined) args.unshift(initialValue)
+                    //     if(args.length === 0) throw new TypeError('reduce empty arr without initial value')
+                    //     if(args.length === 1) return args[0]
+                    //     const result = reducer.call(this,args[0],args[1])
+                    //     return [result,...args.slice(2)].myReduce(reducer)
+                    // }
+                    // log([1, 2, 3].reduce((pre, cur) => pre + cur, 10));
+                // shuffle()方法
+                    // Array.prototype.shuffle = function () {
+                    //     let len = this.length - 1
+                    //     let copy = this.slice()
+                    //     for(let i = 0;i < copy.length - 1;i++){
+                    //         let randomIndex = Math.floor(Math.random()*(len + 1))
+                    //         ;[copy[randomIndex],copy[len]] = [copy[len],copy[randomIndex]]
+                    //         len--
+                    //     }
+                    //     return copy
+                    // }
+                    // const nums = [1, 2, 3, 4, 5];
+                    // log(nums.shuffle());
+            /** day10 */
+                    // new.target
+                        // function foo () {
+                        //     const funcName = arguments.callee.name
+                        //     if(new.target){
+                        //         log(`${funcName}用为构造函数`,new.target)
+                        //     } else {
+                        //         log(`${funcName}用为非构造函数`)
+                        //     }
+                        // }
+                        // new foo()
+                        // foo()
+                    // 手写call
+                        // let name = 'windowName'
+                        // Function.prototype.myCall = function (thisArg,...args) {
+                        //     // 若thisArg为null，则相当于直接调用
+                        //     if(thisArg === null) return this(...args)
+                        //     // 若为三种原始值类型，则进行包装后，再调用 
+                        //     if(['string','number','boolean'].includes(typeof thisArg)){
+                        //         // log()
+                        //         switch (typeof thisArg) {
+                        //             case 'string':
+                        //                 thisArg = new String(thisArg)
+                        //                 break
+                        //             case 'number':
+                        //                 thisArg = new Number(thisArg)
+                        //                 break   
+                        //             case 'boolean':
+                        //                 thisArg = new Boolean(thisArg)
+                        //                 break
+                        //         }
+                        //     }
+
+                        //     let symKey = Symbol('this')
+                        //     thisArg[symKey] = this
+                        //     thisArg[symKey](...args)
+                        //     delete thisArg[symKey]
+                        // }
+                        // let obj = {
+                        //     name:'obj'
+                        // }
+                        // function getName(){
+                        //     log(this)
+                        //     // log(this.name)
+                        // }
+                        // getName.myCall(123)
+                    // 手写bind方法
+                        // 注意这里的this指向很巧妙，使用箭头函数
+                        // Function.prototype.myBind = function(thisArg,...preArgs){
+                        //     return (...otherArgs) => {
+                        //         this.call(thisArg,...preArgs,...otherArgs)
+                        //     }
+                        // }
+                        // let obj = {
+                        //     name:'obj'
+                        // }
+                        // function getName(a,b){
+                        //     log(a,b)
+                        //     log(this)
+                        //     // log(this.name)
+                        // }
+                        // let binded = getName.myBind(123,'a')
+                        // binded('b')
+            /** day11闭包 */
+                // 闭包是一中特殊的函数，这个函数在定义时访问了函数外部的标识符
+                // 被访问的标识符称为自由变量，这种访问称为捕获
+                // 当自由变量被限制于某个局部作用域时，称捕获了自由变量的这个闭包为狭义闭包
+                // 当自由变量在全局作用域时，称捕获了自由变量的这个闭包称为广义闭包
+
+                // 静态作用域，函数执行时，访问的标识符在定义它的那个块中，而不是执行的那个块
+                
+                //使用es5封装es6的class
+                    // 注意：这个必须得是立即执行函数
+                    // const Person = (function (){
+                    //     const personConstru = function(name,age,job){
+                    //         this.name = name
+                    //         this.age = age
+                    //         this.job = job
+                    //     }
+                    //     personConstru.prototype.getName = function(){
+                    //         log(this.name)
+                    //     }
+                    //     return personConstru
+                    // })()
+                    // let person1 = new Person('石榴子',18,'front-end')
+                    // log(person1)
+                // 闭包访问的自由变量具有动态性
+                // 这里结合了访问器属性的getter和setter,立即执行函数暴露的对象添加了一个 foo 属性，该属性访问的就是立即执行函数里的自由变量foo
+                    // const exposure = (function(){
+                    //     let foo = 'foo'
+                    //     setTimeout(() => {
+                    //         foo = 'foo changed'
+                    //     },2000)
+                    //     return {
+                    //         get foo(){
+                    //             return foo
+                    //         }
+                    //     }
+                    // })()
+                    // setTimeout( () => {
+                    //     log(exposure.foo)
+                    // },2500) // 'foo changed'
+
+            /** day12 */
+                // // 使用递归写阶乘函数
+                // function factorial(n) {
+                //     if(n === 0) return 1
+                //     return n * factorial(--n)
+                // }
+                // log(factorial(10)); // -> 3628800
+
+                // // 使用递归写斐波那契函数
+                // function fabonacci(n) {
+                //     if(n === 0) return 0
+                //     if(n === 1) return 1
+                //     return fabonacci(n-1) + fabonacci(n-2)
+                // }
+                // log(fabonacci(20)); // -> 6765
+
+                // // 使用递归写sum函数
+                // function sum(n) {
+                //     if(n === 1) return 1
+                //     return n + sum(n-1)
+                // }
+                // log(sum(100)); // -> 5050
+
+                // function loop(i = 0) {
+                //     if(i >= 10) return i
+                //     return loop(i + 1)
+                // }
+                // log(loop());
+                // // -> 10
+
+                
+                // // function reverse(arr) {
+                // //     return arr.reduce( (preValue,value) => [value,...preValue],[])
+                // // }
+                // // 使用递归反转数组
+                // function reverse(arr) {
+                //     if(arr.length === 1) return arr
+                //     return [arr[arr.length-1],...reverse(arr.slice(0,-1))]
+                // }
+                // log(reverse([1, 2, 3, 4, 5]));// -> [ 5, 4, 3, 2, 1 ]
+                
+                // // 验证回文字符串
+                // const str = 'yakay';
+                // function isPalindrome(str) {
+                //     if(str.length === 1) return true
+                //     return str[0] === str[str.length-1] && isPalindrome(str.slice(1,-1))
+                // }
+                // log(isPalindrome(str)); // -> true
+            
+            /** day13 */
+                // // 手写柯里化函数（主要作用就是固定参数）
+                //     function curry(func){
+                //         return function curried(...preArgs){
+                //             if(preArgs.length >= func.length) return func(...preArgs)
+                //             return function otherCurried(...otherArgs){
+                //                 return curried(...preArgs,...otherArgs)
+                //             }
+                //         }
+                //     }
+                //     // function add (a,b,c){
+                //     //     log(a,b,c)
+                //     //     return a + b + c
+                //     // }
+                //     // // 因为闭包导致自由变量不会被清理
+                //     // let curriedFunc = curry(add)
+                //     // log(curriedFunc(1,2)(9))
+                // // 手写管道函数
+                //     function pipe(...Funcs){
+                //         // return function piped (arg) {
+                //         //     return [...Funcs].reduce( (preValue,value) => value(preValue),arg)
+                //         // }
+                //         return (arg) => [...Funcs].reduce( (preValue,value) => value(preValue),arg)
+                //     }
+                //     // 测试
+                //         // 注意这里的 String原型 上的方法调用的时候需要使用call方法改变 this 指向
+                //         const trim = (str) => String.prototype.trim.call(str)
+                //         const toUpperCase = (str) => String.prototype.toUpperCase.call(str)
+                //         const replace = (pattern,str,value) => String.prototype.replace.call(value,pattern,str)
+                //         const CurriedReplace = curry(replace)(/\s+/g,'_')
+                //         const pipedFunc = pipe(trim,toUpperCase,CurriedReplace,log)
+                //         pipedFunc('  h ell o  ')
+                // // 手写记忆函数
+                //     function memory (func) {
+                //         let map = new Map()
+                //         return function memorized (key){
+                //             if(map.has(JSON.stringify(key))) return map.get(JSON.stringify(key))
+                //             const result = func(key)
+                //             map.set(JSON.stringify(key),result)
+                //             return result
+                //         } 
+                //     }
+                //     function typeMap (value) {
+                //         log('计算')
+                //         return typeof value
+                //     }
+                //     let memorizedFun = memory(typeMap)
+                //     log(memorizedFun({}))
+                //     log(memorizedFun({}))
+                // // 手写一道算法题：获取一个数组里出现次数大于 k 次的元素
+                       //先将数组转成一个包含了每个元素对应计数的map
+                       //再对map进行
+                //     const itemToMap = (arr) => {
+                //         let map = new Map()
+                //         arr.forEach(key => {
+                //             if(map.has(key)) map.set(key,map.get(key)+1)
+                //             else map.set(key,1)
+                //         })
+                //         return map
+                //     };
+                //     const mapFilter = (k,map) => [...map].filter( ([key,count]) => count > k)
+                //     const curriedMapFilter = curry(mapFilter)(3)
+                //     const arrToItem = (arr) => arr.map( ([item,index]) => item)
+                //     let pipedFun = pipe(itemToMap,curriedMapFilter,arrToItem,log)
+                //     pipedFun([1,2,2,2,5,5,5,5,5])
+            
+            /** day17 */
+                // 防抖
+                function debounce(callback,wait){
+                    let timer = null
+                    return function debounced(...args){
+                        // 若第一次要调用
+                        if(!timer){
+                            callback(...args)
+                        }
+                        clearTimeout(timer)
+                        setTimeout(callback,wait,...args)
+                    }
+                }
+        </script>
+</body>
+</html>

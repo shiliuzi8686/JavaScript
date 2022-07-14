@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        'use strict';
+        const { log } = console;
+
+        /**
+         * 借用浅冻结实现深冻结
+        */
+        Object.deepFreeze = function deepFreeze(obj) {
+            // 只能冻结对象
+            if(obj === null) return
+            if(Object(obj) !== obj) return
+            
+            // 冻结当前对象（基本类型的属性）
+            Object.freeze(obj)
+            // 对于引用类型的属性，继续冻结
+            Object.keys(obj).map((key) => {if( obj[key] instanceof Object) deepFreeze(obj[key])})
+            return obj
+        };
+
+        const obj1 = {
+            info: 'obj1',
+        };
+
+        const obj2 = Object.deepFreeze({
+            info: 'obj2',
+            obj1,
+        });
+
+        log(obj2);
+        obj2.obj1.info = 'obj1 changed';
+        log(obj2);
+    </script>
+</body>
+</html>

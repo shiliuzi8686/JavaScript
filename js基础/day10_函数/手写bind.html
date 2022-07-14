@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        'use strict';
+        const { log } = console;
+
+        Function.prototype.myBind = function myBind(thisArg, ...presetArgs) {
+            // 原始值需要被包装
+            if(Object(thisArg) !== thisArg) thisArg = Object(thisArg)
+
+            let tempThis = Symbol('this')
+            thisArg[tempThis] = this
+
+            return function(...args){
+                // 存在闭包，因此内部函数引用的 外部函数的变量不会被销毁
+                // 内部函数依然可以继续使用该外部变量
+                thisArg[tempThis].apply(thisArg,[...presetArgs,...args])
+            }
+        };
+
+        function logInfo(a, b) {
+            log(a, b);
+            log(this);
+        }
+
+        const bindedLogInfo = logInfo.myBind('thisArg', 1, 2);
+        bindedLogInfo(3, 4);
+        // -> 1 2
+        // -> 'thisArg'
+    </script>
+</body>
+</html>

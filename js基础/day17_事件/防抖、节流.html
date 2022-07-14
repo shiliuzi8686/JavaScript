@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" oninput="inputChg(event)"/>
+    <script>
+        const {log} = console
+        // 防抖
+            // const debounce = (callback, wait) => {
+            //     let time = null
+            //     let timer
+            //     return function (...arg) {
+            //         // 第一次输入或短时间内再次输入则重新开始计时
+            //         if(!time || Date.now() - time < wait){
+            //             // log('rest')
+            //             time = Date.now()
+            //             clearTimeout(timer)
+            //             timer = setTimeout( () => {
+            //                 callback(...arg)
+            //             },wait)
+            //             return
+            //         }
+            //         time = Date.now()
+            //         timer = setTimeout( () => {
+            //             callback()
+            //         },wait)
+                    
+            //     }
+            // }
+            // // inputChg =  function (event){
+            // //     // event.target拿到了目标元素就是该input元素
+            // //     // 像这种输入类的元素一般都存在value属性，保存用户输入的值或者说该元素上用户已经输入的值
+            // //     log('输入框内容：',event.target.value)
+            // // }
+            //     // let fn = function (event) {
+            //     //     log('输入框内容：',event)
+            //     //     // log('输入框内容：',event.target.value)
+            //     // }
+            // let inputChg = debounce(function(event){
+            //     log('输入：',event.target.value)
+            // },2000)
+        // 节流
+        const throttle = (callback, delay) => {
+            let flag = true
+            return function (...arg) {
+                if(flag){
+                    callback(...arg)
+                    flag = false
+                    setTimeout(() => {
+                        flag = true
+                    },delay)
+                }
+            }
+        };
+        // 指定的点击事件是throttle()函数返回的function，即每次页面输入执行的是throttle返回的函数
+        // 即我们给点击事件绑定事件处理程序的时候就得绑定的是throttle返回的函数
+        let inputChg = throttle(function(event){
+            log('输入：',event.target.value)
+        },2000)
+    </script>
+</body>
+</html>
