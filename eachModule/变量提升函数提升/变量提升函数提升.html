@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /** Q1:变量提升和函数提升，先执行变量提升再执行函数提升（后面执行的会覆盖之前执行的变量）*/ 
+
+        // 作用域是沿着书写代码的区域查找的，而不是调用函数的区块
+            // var message = 'hello global'
+            // function foo(){
+            //     console.log(message)
+            // }
+            // function bar(){
+            //     var message = 'hello bar'
+            //     foo()
+            // }
+            // bar() //'hello global'
+        
+        // 函数提升
+        let x = 2
+        function foo(){
+            console.log(x)
+            function x (){ }
+        }
+        foo() // function x(){}
+    </script>
+</body>
+</html>
