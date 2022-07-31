@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding:0;
+            margin: 0;
+        }
+        #slider > ul{
+            margin: 150px 100px;
+            list-style-type: none;
+            position: relative;
+        }
+        .slider-list_item,
+        .slider-list_item-selected{
+            position: absolute;
+            opacity: 0;
+        }
+        #slider > ul img {
+            width: 700px;
+            /* height: 150px; */
+        }
+        .slider-list_item-selected{
+            transition: opacity 1s;
+            opacity:1;
+        }
+    </style>
+</head>
+<body>
+    <div id="slider">
+        <ul>
+            <li class="slider-list_item  slider-list_item-selected">
+                <img src="./斗1.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗2.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗3.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗4.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗5.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗6.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗7.jpg" alt="">
+            </li>
+            <li class="slider-list_item">
+                <img src="./斗8.jpg" alt="">
+            </li>
+        </ul>
+    </div>
+    <a href="slider-list_next"></a>
+    <a href="slider-list_previous"></a>
+    <div id="slider-list_controller">
+        <a class="slider-list_controller_item"></a>
+        <a class="slider-list_controller_item"></a>
+        <a class="slider-list_controller_item_selcted"></a>
+        <a class="slider-list_controller_item"></a>
+        <a class="slider-list_controller_item"></a>
+        <a class="slider-list_controller_item"></a>
+        <a class="slider-list_controller_item"></a>
+        <a class="slider-list_controller_item"></a>
+    </div>
+    <script>
+        const {log} = console
+        class Slider{
+            constructor(id){
+                this.container = document.querySelector(id)
+                this.items = this.container
+                // this.controller = 
+                .querySelectorAll('.slider-list_item,.slider-list_item-selected')
+                log(this.container)
+                log(this.items)
+            }
+            getSelectedItem(){
+                const selected = this.container
+                .querySelector('.slider-list_item-selected')
+                log(selected)
+                return selected
+            }
+            getIndexOfSelectedItem(){
+                const currentIndex = Array.from(this.items).indexOf(this.getSelectedItem())
+                return currentIndex
+            }
+            
+            slideTo(idx){
+                const selectedItem = this.getSelectedItem()
+                selectedItem.className = 'slider-list_item'
+                const currentSelectedItem = this.items[idx]
+                // 容错机制：最后一个元素 and 第一个元素
+                if(currentSelectedItem){
+                    currentSelectedItem.className = 'slider-list_item-selected'
+                }
+            }
+            // 特殊情况：最后一个元素
+            slideNext(){
+                this.slideTo( (this.getIndexOfSelectedItem() + 1) % this.items.length )
+            }
+            // 特殊情况：第一个元素
+            slidePrevious(){
+                this.slideTo( (this.items.length + this.getIndexOfSelectedItem() - 1) % this.items.length )
+            }
+        }
+        const mySlider = new Slider('#slider')
+        setInterval( () => {
+            mySlider.slideNext()
+        }, 2000)
+        // setInterval(mySlider.slideNext(),2000) //这个回调为什么是立即执行的
+
+        // 通过自定义事件来解耦 行为：控制流
+    </script>
+</body>
+</html>

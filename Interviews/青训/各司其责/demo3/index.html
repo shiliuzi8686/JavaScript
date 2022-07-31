@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .night{
+            background-color: black;
+            color: white;
+        }
+        #modeBtn{
+            display: none;
+        }
+        #modeBtn:checked ~ article{
+            background-color: black;
+            color: white;
+        }
+        #modeBtn:checked ~ article label::after{
+            content: '🌙';
+        }
+        #modeBtn ~ article label::after{
+            content: '🌞';
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 没有了js，则无法通过点击事件的处理函数来切换样式
+        // 但实际上点击事件除了在js层面存在回调处理函数之外，
+        // 对于某些元素的css样式会有捕获或者说对应的影响：
+        // lebal的点击会改变的状态 disabled为true
+
+        // 这个方法实在太酷了，我们脱离了原来依靠js完成样式的改变的方式
+        // 转向用纯css实现该功能，之后若我们想改样式也只需要在css中，不需要考虑js逻辑层
+        // 有利于做样式的分离
+    </script>
+    <input id="modeBtn" type="checkbox" >
+    <article>   
+        <h2>深夜食堂</h2>
+        <label for="modeBtn"></label>
+        <div>
+            你来人间一趟，你要看看太阳，和你的心上人，一起走在街上。
+        </div>
+    </article>
+</body>
+</html>
