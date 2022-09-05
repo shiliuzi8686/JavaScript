@@ -32,4 +32,20 @@ log(instanceMap) // [false,true,false,true,false,true,false,true,false,true,true
 // log(Object(undefined) instanceof undefined) // 报错，Uncaught TypeError: Right-hand side of 'instanceof' is not an object
 // // undefined是一个全局属性，参考MDN
 
-
+// 带思考：
+// object必须是对象类型，才能有隐式原型属性
+// constructor是大写形式
+function myInstanceOf(object,constructor){
+    let curProto = Object.getPrototypeOf(object)
+    // while(curProto !== constructor && curProto !== null){
+    //     curProto = Object.getPrototypeOf(curProto)
+    // }
+    // if(curProto === null) return false
+    // return true
+    while(curProto){ //只要不是null,就一直循环进行的工作
+        if(curProto === constructor) return true // 正确的情况在这里返回
+        curProto = Object.getPrototypeOf(curProto) //当前不对，继续
+    }
+    // 到这，说明不是
+    return false
+}
